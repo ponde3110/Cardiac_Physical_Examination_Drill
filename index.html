@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon.ico">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="CardiacPE Drill">
+<title>Cardiac Physical Examination Drill - 100 Questions</title>
+<!-- developed by Tatsuya Kawasaki (Matsushita Memorial Hospital) -->
+<style>
+body{margin:0;font-family:"Helvetica Neue",sans-serif;background:linear-gradient(180deg,#e3f2fd,#ffffff);}
+.hidden{display:none;}
+.container{max-width:720px;margin:auto;padding:16px;}
+.card{background:#fff;border-radius:22px;padding:24px;box-shadow:0 12px 30px rgba(0,0,0,.15);margin-top:20px;}
+.entry-title{
+  font-size: 27px;
+  color: #b71c1c;                   /* text color: red emphasis */
+  text-align: center;
+  font-weight: bold;
+  background-color: rgba(183,28,28,0.2); /* light red background */
+  padding: 16px 24px;               /* generous padding */
+  border-radius: 16px;              /* rounded corners */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25); /* shadow for depth */
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.6); /* subtle text shadow */
+}
+.rule-row{display: flex;
+  flex-direction: column;  /* stack icon and rules vertically */
+  align-items: center;     /* center the icon */
+  justify-content: center;
+  gap: 10px;               /* gap between icon and rules */
+  margin: 20px 0;
+}
+.rule-row img{width:80px;flex-shrink:0;}
+.rule{margin:0;padding-left:20px;}
+.rule li{margin:8px 0;font-size:16px;}
+.credit{margin-top:20px;font-size:12px;color:#444;text-align:center;}
+.credit a{color:#1565c0;text-decoration:none;}
+button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;margin-top:14px;cursor:pointer;}
+
+/* =========================
+   Top page common button styles
+   ========================= */
+#startBtn,
+#practiceBtn,
+#reviewBtn {
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 14px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+  transition: all 0.2s ease;
+}
+
+/* =========================
+   Exam mode (base color)
+   ========================= */
+#startBtn {
+  background: linear-gradient(
+    135deg,
+    #ef9a9a,
+    #f48fb1
+  );
+}
+
+/* =========================
+   Practice mode (pinkish beige)
+   ========================= */
+#practiceBtn {
+  background: linear-gradient(
+    135deg,
+    #f6d6c9,
+    #eec1b3
+  );
+}
+
+/* =========================
+   Review mode (pinkish gray)
+   ========================= */
+#reviewBtn {
+  background: linear-gradient(
+    135deg,
+    #e6dede,
+    #d2c6c9
+  );
+}
+
+/* =========================
+   Hover effect (common)
+   ========================= */
+#startBtn:hover,
+#practiceBtn:hover,
+#reviewBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+
+#answerBtn {
+  background: linear-gradient(135deg, #90caf9, #64b5f6); /* gradient */
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 14px;
+  border: none;
+  border-radius: 30px; 
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* shadow for depth */
+  transition: all 0.2s ease; /* hover animation */
+}
+
+#answerBtn:hover {
+  transform: translateY(-3px); /* float up slightly */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3); /* stronger shadow */
+}
+
+#nextBtn {
+  background: linear-gradient(135deg, #81c784, #66bb6a); /* gradient */
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 14px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* shadow for depth */
+  transition: all 0.2s ease; /* hover animation */
+}
+
+#nextBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+#resultBtn {
+  background: linear-gradient(135deg, #ce93d8, #ba68c8); /* gradient */
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 14px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+  transition: all 0.2s ease;
+}
+
+#resultBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Try Again button */
+#result button {
+  background: linear-gradient(135deg, #ffcc80, #ffb74d); /* gradient */
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 14px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* depth effect */
+  transition: all 0.2s ease;
+}
+
+#result button:hover {
+  transform: translateY(-3px);           /* float up slightly */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3); /* strengthen shadow */
+}
+
+#exp {
+  background-color: rgba(255, 235, 205, 0.4); /* light beige background */
+  padding: 12px 16px;       /* inner padding */
+  border-radius: 12px;       /* rounded corners */
+  margin-top: 12px;          /* top margin */
+  line-height: 1.6;          /* readability */
+}
+
+/* mute button */
+#soundToggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin:8px 0;
+  font-size: 16px;
+  color: #999;                 /* base color subtle */
+}
+
+/* label */
+#soundToggle .label {
+  color: #555;
+  margin-right: 4px;
+}
+
+/* icon common styles */
+#soundToggle span {
+  cursor: pointer;
+  transition: color 0.15s ease,
+              opacity 0.15s ease,
+              transform 0.15s ease;
+}
+
+/* unselected */
+#soundToggle span:not(.active):not(.label) {
+  opacity: 0.35;               /* clearly dimmed */
+}
+
+/* selected (clear at a glance) */
+#soundToggle span.active {
+  opacity: 1;
+  color: #111;                 /* near black */
+  transform: scale(1.15);      /* subtle emphasis */
+}
+
+#meisterBtn{background:linear-gradient(135deg,#ffe082,#ffd54f);font-size:20px;font-weight:bold;}
+.choice{display:block;background:#f5f5f5;padding:14px;margin:10px 0;border-radius:14px;font-size:18px;cursor:pointer;}
+.choice:hover{background:#e1f5fe;}
+.correct{background:#c8e6c9;color:#333;}
+.wrong{background:#f8bbd0;color:#333;}
+.progress-wrap{height:14px;background:#ddd;border-radius:10px;margin-bottom:16px;}
+.progress-bar{height:14px;width:0%;background:linear-gradient(90deg,#90caf9,#64b5f6);border-radius:10px;transition:.4s;}
+
+
+@keyframes shake{25%{transform:translateX(-6px);}50%{transform:translateX(6px);}75%{transform:translateX(-6px);} }
+.shake{animation:shake .4s;}
+@keyframes shine{50%{box-shadow:0 0 30px gold;} }
+.shine{animation:shine .6s;}
+.result-box{text-align:center;padding:30px;border-radius:22px;animation:fade .8s;}
+@keyframes fade{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);} }
+.rank-title{font-size:28px;margin-bottom:10px;}
+.rank-sub{font-size:22px;margin-bottom:20px;}
+.beginner{background:linear-gradient(180deg,#d8f0d8,#ffffff);}
+.middle{background:linear-gradient(180deg,#d0e0f0,#ffffff);}
+.advanced{background:linear-gradient(180deg,#f0d0d0,#ffffff);}
+.meister{background:linear-gradient(180deg,#fff8e1,#ffefc0);box-shadow:0 0 40px gold;}
+.medal{width:150px;margin:20px auto;animation:glow 1s infinite alternate;}
+.underline {
+  text-decoration: underline;
+  text-decoration-color: red; /* change underline color if needed */
+}
+@keyframes glow{from{box-shadow:0 0 10px gold;}to{box-shadow:0 0 40px gold;} }
+@media(max-width:480px){.rule-row{flex-direction:column;} }
+#disclaimer {
+  margin-top: 24px;
+  font-size: 5px;
+  color: #aaa;
+  text-align: left;
+  line-height: 1.6;
+}
+
+/* Top page icon: very smooth breathing animation */
+@keyframes gentlePulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.88;
+  }
+  50% {
+    transform: scale(1.20);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.88;
+  }
+}
+
+#topIcon {
+  width: 64px;
+  height: 64px;
+  margin: 24px auto;
+
+  animation: gentlePulse 7s linear infinite;
+  will-change: transform, opacity;
+
+  /* Force GPU layer */
+  transform: translateZ(0);
+}
+
+/* Cute click animation */
+@keyframes iconPop {
+  0%   { transform: scale(1) rotate(0deg); }
+  30%  { transform: scale(1.25) rotate(8deg); }
+  60%  { transform: scale(0.95) rotate(-8deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.icon-pop {
+  animation: iconPop 0.5s ease;
+}
+
+#bestScoreDisplay {
+  margin: 16px auto 0;
+  padding: 10px 16px;
+  max-width: 260px;
+
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+
+  background: linear-gradient(to right, #eeeeee, #fafafa, #eeeeee);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+#bestScoreValue {
+  margin: 0 4px;
+  font-size: 1.15rem;
+  color: #c62828;
+}
+
+
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="entry" class="card">
+<h1 class="entry-title">Cardiac Physical Exam<br>- 100-Question Drill -</h1>
+<div class="rule-row">
+<br>
+<div id="topIcon"><img src="black.gif" alt="icon"></div>
+<p id="bestScoreDisplay"
+   style="text-align:center; font-weight:bold; margin-top:12px;">
+  🏆 Best Score: <span id="bestScoreValue"></span> pts 🏆
+</p>
+<ul class="rule">
+<li>100 randomized four-choice questions</li>
+<li>Exam mode ends on first wrong answer</li>
+<li>Score determines your rank and title</li>
+<li>Perfect score unlocks a <span style="color: #cc0000;"><b>secret</b></span> messages</li>
+<li>Practice mode: 10 random questions</li>
+<li>Review mode: retry missed questions</li>
+</ul>
+</div>
+
+<div id="soundToggle">
+  (<span class="label">Sound</span>
+
+  <span id="soundOn"  title="Sound ON">🔊</span>
+  <span id="soundOff" title="Mute">🔇</span>)
+</div>
+
+
+<button id="startBtn" onclick="start()">Exam Mode 🚀 All Questions</button>
+<button id="practiceBtn" onclick="startPractice()">Practice Mode ✏️ 10 Questions</button>
+<button id="reviewBtn" onclick="startReviewFromTop()"></button>
+
+
+<div class="credit">
+<br>
+&copy;ponde2026<br>
+</div>
+
+  <!-- Disclaimer at the bottom of top page -->
+  <div id="disclaimer">
+  While every effort has been made to ensure the accuracy and currency of the information contained in this app, its completeness cannot be guaranteed. The interpretation of physical findings is not always unambiguous, and the authors accept no responsibility for any loss or damage arising from the use of the information presented herein. Content may be added, modified, or removed without notice. All content in this app is protected by copyright. All physical examination findings have been shared with the informed consent of the individuals concerned.
+</div>
+</div>
+
+<div id="quiz" class="card hidden">
+<div class="progress-wrap"><div id="bar" class="progress-bar"></div></div>
+<p id="status"></p>
+<h3 id="question"></h3>
+<form id="choices"></form>
+<button id="answerBtn" onclick="check()">Submit Answer</button>
+<h3 id="msg"></h3>
+<p id="exp"></p>
+<button id="nextBtn" class="hidden" onclick="next()">Next Question</button>
+<button id="meisterBtn" class="hidden" onclick="finish()">🏆 Perfect Score! 🏆</button>
+<button id="resultBtn" class="hidden" onclick="finish()">See Results</button>
+</div>
+
+<div id="result" class="card hidden">
+<div id="resultBox" class="result-box"></div>
+<button onclick="reset()">Try Again</button>
+</div>
+</div>
+
+<script>
+
+// Reset best score and Meister status
+/* ---
+localStorage.removeItem("bestScore");
+localStorage.setItem("meisterCleared", "false");
+--- */
+
+// ===== REVIEW MODE START =====
+let wrongQuestions = [];   // incorrectly answered question indices
+let reviewMode = false;   // whether review mode is active
+
+function startReviewFromTop() {
+
+  // Do nothing if there are no questions to review
+  if (wrongQuestions.length === 0) {
+    return;
+  }
+
+  // Start review mode
+  reviewMode = true;
+  mode = "review";
+
+  // Show only incorrect questions
+  order = [...wrongQuestions];
+
+  // Initialize
+  i = 0;
+  score = 0;
+
+  // Switch screens
+  entry.classList.add("hidden");
+  result.classList.add("hidden");
+  quiz.classList.remove("hidden");
+
+  // Show first question
+  show();
+}
+
+
+function finishReview() {
+
+  reviewMode = false;
+  mode = "challenge"; // reset
+
+  quiz.classList.add("hidden");
+  entry.classList.remove("hidden");
+}
+
+function updateReviewButton() {
+  const btn = document.getElementById("reviewBtn");
+  if (!btn) return;
+
+  btn.textContent = `Review Mode 🔗 ${wrongQuestions.length} Questions`;
+}
+
+// ===== REVIEW MODE END =====
+
+function updateBestScoreDisplay() {
+  // 未保存なら 0 点として扱う
+  const score = Number(localStorage.getItem("bestScore")) || 0;
+  const value = document.getElementById("bestScoreValue");
+  if (value) value.textContent = score;
+}
+
+document.addEventListener("DOMContentLoaded", updateBestScoreDisplay);
+
+document.addEventListener("DOMContentLoaded", () => {
+  // 初回アクセス時は bestScore = 0 を入れておく（保険）
+  if (localStorage.getItem("bestScore") === null) {
+    localStorage.setItem("bestScore", "0");
+  }
+});
+
+
+// ===== SOUND =====
+let soundEnabled =
+  localStorage.getItem("soundEnabled") === "true"; // initial mute; true = on
+
+  document.addEventListener("DOMContentLoaded", () => {
+  const iconOn  = document.getElementById("soundOn");
+  const iconOff = document.getElementById("soundOff");
+
+  function updateSoundUI() {
+    iconOn.classList.toggle("active",  soundEnabled);
+    iconOff.classList.toggle("active", !soundEnabled);
+  }
+
+  /* Reflect initial state in UI */
+  updateSoundUI();
+
+  /* Save sound setting */
+  iconOn.addEventListener("click", () => {
+    soundEnabled = true;
+    localStorage.setItem("soundEnabled", "true");
+    updateSoundUI();
+  });
+
+  iconOff.addEventListener("click", () => {
+    soundEnabled = false;
+    localStorage.setItem("soundEnabled", "false");
+    updateSoundUI();
+  });
+});
+
+
+
+const ctx = new (window.AudioContext||window.webkitAudioContext)();
+
+function tone(f,d){
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.frequency.value = f;
+  o.connect(g);
+  g.connect(ctx.destination);
+  o.start();
+  g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + d);
+}
+
+const click = () => {
+  if (!soundEnabled) return;
+  tone(400, .1);
+};
+
+const ok = () => {
+  if (!soundEnabled) return;
+  tone(700, .1);
+};
+
+const ng = () => {
+  if (!soundEnabled) return;
+  tone(50, 1.2);
+};
+
+
+/* ===== QUESTIONS ===== */
+const Q = [
+  [
+    "Q1: Which of the following is correct regarding the stethoscope?",
+    ["Consists of earpieces, tubing, and a chestpiece", "The chestpiece has a diaphragm and a bell", "The diaphragm and bell are used selectively as needed", "All of the above"],
+    3,
+    "The chestpiece of a stethoscope has two sides: the larger side is the diaphragm and the smaller side is the bell."
+  ],
+  [
+    "Q2: Which of the following is correct regarding the stethoscope?",
+    ["The diaphragm is used for high-pitched sounds", "The bell is used for low-pitched sounds", "The diaphragm is pressed firmly; the bell is applied lightly", "All of the above"],
+    3,
+    "If the bell is pressed too firmly against the chest wall, low-pitched sounds become inaudible, similar to using the diaphragm."
+  ],
+  [
+    "Q3: Which of the following is correct regarding S1?",
+    ["Corresponds to closure of the atrioventricular valves", "Systole falls between S1 and S2", "Its intensity is influenced by body position, PR interval, and chest wall thickness", "All of the above"],
+    3,
+    "S1 is primarily generated by closure of the atrioventricular valves — the mitral and tricuspid valves."
+  ],
+  [
+    "Q4: Which of the following is correct regarding S1 in healthy individuals?",
+    ["Lower pitched than S2", "Longer duration than S2", "Heard more clearly at the apex than the base", "All of the above"],
+    3,
+    "Compared with S2, S1 is lower pitched, longer, and more prominent at the cardiac apex."
+  ],
+  [
+    "Q5: Which of the following is correct regarding S2?",
+    ["Corresponds to closure of the semilunar valves", "Diastole falls between S2 and S1", "Its intensity is influenced by body position and body habitus", "All of the above"],
+    3,
+    "S2 is primarily generated by closure of the semilunar valves — the aortic and pulmonic valves."
+  ],
+  [
+    "Q6: Which of the following is <span class='underline'>incorrect</span> regarding S2 in healthy individuals?",
+    ["Lower pitched than S1", "Shorter duration than S1", "Heard more clearly at the base than the apex", "Can be split"],
+    0,
+    "Compared with S1, S2 is higher pitched, shorter in duration, and more prominent at the cardiac base."
+  ],
+  [
+    "Q7: Which of the following is <span class='underline'>incorrect</span> regarding S2 splitting in healthy individuals?",
+    ["Splitting may occur during inspiration", "Splitting is assessed at the cardiac apex", "Splitting consists of the aortic component followed by the pulmonic component", "The aortic component is louder than the pulmonic component"],
+    1,
+    "S2 splitting is best assessed near Erb's point (left sternal border at the 3rd intercostal space)."
+  ],
+[
+  "Q8: Heart sounds in decompensated heart failure (3L)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q8.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+  ["S2 is split", "The pulmonic component of S2 is louder than the aortic component", "Pulmonary hypertension is suspected", "All of the above"],
+  3,
+  "When S2 is split and the second component (pulmonic) is louder than the first (aortic), pulmonary hypertension should be suspected."
+],
+  [
+    "Q9: Which of the following is <span class='underline'>incorrect</span> regarding jugular vein anatomy?",
+    ["The external jugular vein is a superficial vein with easily visible pulsations", "The internal jugular vein is deep; pulsations are assessed indirectly through the skin", "The external jugular vein has effective competent valves", "The left jugular vein has a straight anatomical relationship with the right atrium"],
+    3,
+    "It is the right jugular vein, not the left, that has a direct anatomical relationship with the right atrium. The external jugular vein is more visible but its pressure can be modified by valves, so the right internal jugular vein is used to estimate right atrial pressure."
+  ],
+  [
+    "Q10: Which of the following is <span class='underline'>incorrect</span> regarding jugular venous assessment?",
+    ["Assessment must be performed at 45° semi-recumbent position", "If right internal jugular pulsations are clearly visible in the seated position, heart failure is suspected", "If right internal jugular pulsations are not visible in the supine position, dehydration is suspected", "Assessment of the right internal jugular vein may be difficult in obese patients"],
+    0,
+    "The traditional semi-recumbent quantitative method (measuring the vertical distance between the upper border of right internal jugular pulsation and the sternal angle) is difficult in clinical practice. A qualitative seated approach (visible or not) is more practical in suspected heart failure."
+  ],
+  [
+    "Q11: Patient presenting with dyspnea at rest (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q11.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["No periodic pulsation is visible in the neck", "Right atrial pressure is not elevated", "Similar findings can be seen in healthy individuals", "Decompensated heart failure is suspected"],
+    3,
+    "Visible pulsation of the right internal jugular vein in the seated position indicates markedly elevated right atrial pressure — consistent with a diagnosis of heart failure."
+  ],
+  [
+    "Q12: Patient presenting with exertional dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q12.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["No periodic neck pulsation at rest", "Internal jugular pulsation appears on inspiration", "Elevated right atrial pressure is suspected", "Similar findings are often seen in healthy individuals"],
+    3,
+    "Internal jugular pulsation that newly appears on inspiration suggests heart failure. This finding is also referenced in the 2025 revised heart failure guidelines."
+  ],
+  [
+    "Q13: Which of the following is correct regarding S3?",
+    ["An extra sound occurring immediately after S2", "An extra sound occurring immediately before S1", "Assessed using the diaphragm of the stethoscope", "Assessed at the left sternal border (Erb's point)"],
+    0,
+    "S3 is a low-pitched extra sound occurring in early diastole, best heard by lightly applying the bell of the stethoscope at the apex."
+  ],
+  [
+    "Q14: Which of the following is <span class='underline'>incorrect</span> regarding S3?",
+    ["Not uncommon in healthy young individuals", "Easier to hear in the left lateral decubitus position than upright or supine", "A ventricular wall impact sound related to atrial contraction and blood inflow", "More likely to be present in heart failure or mitral regurgitation"],
+    2,
+    "S3 is thought to arise from the impact of the ventricular wall during rapid ventricular filling (corresponding to the E wave on echocardiography), not from atrial contraction."
+  ],
+  [
+    "Q15: Which of the following is correct regarding S4?",
+    ["An extra sound occurring immediately after S2", "An extra sound occurring immediately before S1", "Best heard at the cardiac base rather than the apex", "Assessed using the diaphragm of the stethoscope"],
+    1,
+    "S4 is a low-pitched extra sound occurring in the pre-systolic period, best heard by lightly applying the bell at the apex."
+  ],
+  [
+    "Q16: Which of the following is <span class='underline'>incorrect</span> regarding S4?",
+    ["Its presence is always abnormal", "It can sometimes be heard in patients with atrial fibrillation", "It is related to atrial contraction", "More likely in hypertrophic cardiomyopathy or ischemic heart disease"],
+    1,
+    "S4 is related to atrial contraction and ventricular wall vibration from blood inflow (corresponding to the A wave on echocardiography). Therefore, S4 cannot be heard in patients with atrial fibrillation."
+  ],
+  [
+    "Q17: Patient presenting with exertional dyspnea<br><video controls style='width:100%; max-width: 600px; height:auto;'><source src='q17.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which extra sound is present?",
+    ["S3", "S4", "Neither S3 nor S4", "S3 and S4 cannot be distinguished"],
+    0,
+    "S3 is an extra sound immediately after S2, audible only when the bell is lightly applied at the apex (i.e., low-pitched). This patient was later diagnosed with dilated cardiomyopathy. In patients with reduced left ventricular contractility, S1 tends to be diminished due to slower rise in LV pressure."
+  ],
+  [
+    "Q18: Patient referred for ECG abnormality<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q18.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which extra sound is present?",
+    ["S3", "S4", "Neither S3 nor S4", "S3 and S4 cannot be distinguished"],
+    1,
+    "S4 is an extra sound immediately before S1, audible only when the bell is lightly applied at the apex (i.e., low-pitched). This patient was later diagnosed with hypertrophic cardiomyopathy."
+  ],
+  [
+    "Q19: Which of the following is <span class='underline'>incorrect</span> regarding gallop rhythm?",
+    ["Resembles the sound of a galloping horse", "Also called 'bruit de galop' in French", "Suggests decompensated heart failure", "Requires auscultation with the diaphragm since it includes S3 or S4"],
+    3,
+    "S3 and S4 are low-pitched sounds and should be auscultated with the bell of the stethoscope."
+  ],
+  [
+    "Q20: Which of the following is <span class='underline'>incorrect</span> regarding gallop rhythm?",
+    ["A ventricular gallop has S3 as the extra sound", "An atrial gallop has S4 as the extra sound", "Co-existing S3 and S4 produces a two-beat rhythm", "Overlapping S3 and S4 produces a summation gallop"],
+    2,
+    "Co-existing S3 and S4 produces a quadruple rhythm (four heart sounds in total: S1, S2, S3, and S4)."
+  ],
+  [
+    "Q21: Patient with dyspnea — heart sounds at presentation and 2 weeks after treatment<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q21.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct regarding the presentation?",
+    ["A gallop is audible", "It is difficult to distinguish S3 from S4 by auscultation", "Decompensated heart failure is suspected", "All of the above"],
+    3,
+    "The characteristic sound of a gallop — like a horse at full gallop — should be committed to auditory memory."
+  ],
+  [
+    "Q22: Patient with dyspnea — heart sounds at presentation and 2 weeks after treatment<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q21.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct regarding 2 weeks later?",
+    ["Gallop persists at 2 weeks", "Heart rate is slightly lower at 2 weeks", "The type of gallop differs between presentation and 2 weeks", "All of the above"],
+    3,
+    "At presentation, S3 and S4 overlap to create a summation gallop. At 2 weeks, the slightly slower heart rate separates them into a quadruple rhythm (distinct S3 and S4)."
+  ],
+  [
+    "Q23: Which physical finding is specific for congestion in heart failure?",
+    ["S3", "Gallop rhythm", "Visible right internal jugular pulsation in the seated position", "All of the above"],
+    3,
+    "Other specific findings listed in guidelines include leftward displacement of the apical impulse and Cheyne-Stokes respiration."
+  ],
+  [
+    "Q24: Which of the following physical findings in heart failure is <span class='underline'>non</span>-specific for congestion?",
+    ["Tachypnea, pulmonary rales", "Peripheral edema (lower extremities, buttocks, scrotum)", "Weight gain (>2 kg/week)", "All of the above"],
+    3,
+    "Other non-specific findings listed in guidelines include diminished breath sounds/dullness to percussion at the lung bases (pleural effusion) and hepatomegaly/ascites."
+  ],
+  [
+    "Q25: Which symptom is typical of pulmonary congestion/elevated left atrial pressure in heart failure?",
+    ["Dyspnea on exertion", "Orthopnea, paroxysmal nocturnal dyspnea", "Bendopnea (dyspnea when bending forward)", "All of the above"],
+    3,
+    "Atypical symptoms listed in the guidelines include nocturnal cough and wheezing."
+  ],
+  [
+    "Q26: Which symptom is typical of systemic congestion/elevated right atrial pressure in heart failure?",
+    ["Abdominal bloating", "Early satiety", "Bendopnea (dyspnea when bending forward)", "Reduced appetite"],
+    2,
+    "Lower extremity edema is another typical finding listed in the guidelines. Bendopnea is listed as typical for both pulmonary congestion/elevated LAP and systemic congestion/elevated RAP."
+  ],
+  [
+    "Q27: Which of the following is correct regarding the apical impulse in healthy individuals (supine)?",
+    ["The lateral-most point in women is within 10 cm from the midsternum", "The lateral-most point in men is medial to the left nipple", "The character is a brief, tapping quality", "All of the above"],
+    3,
+    "The apical impulse provides a wealth of information, but is reportedly palpable in only about 30% of subjects in the supine position."
+  ],
+  [
+    "Q28: Patient with prior myocardial infarction (supine, right side of head)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q28.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["No apical impulse is visible", "The apical impulse is medial to the left nipple", "A laterally displaced apical impulse suggests cardiomegaly", "A laterally displaced apical impulse suggests cardiac hypertrophy"],
+    2,
+    "Lateral displacement of the apical impulse in the supine position suggests cardiomegaly."
+  ],
+  [
+    "Q29: Which of the following is the correct method for assessing the apical impulse in the supine position?",
+    ["Inspection only", "Inspection combined with palpation", "Assessment from the left side only", "Palpation only"],
+    1,
+    "The apical impulse should be assessed by combining inspection and palpation from multiple directions."
+  ],
+  [
+    "Q30: Patient with heart failure (supine, left breast viewed tangentially)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q30.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["No apical impulse is visible", "The impulse pattern is normal", "The apical impulse cannot be assessed from this angle", "The impulse pattern suggests cardiac hypertrophy"],
+    3,
+    "Viewed tangentially, this patient has a prolonged upstroke of the apical impulse — called a 'heaving' or 'sustained' impulse — which suggests cardiac hypertrophy. A normal apical impulse is either impalpable or has a brief, tapping quality."
+  ],
+  [
+    "Q31: Which breathing pattern is associated with heart failure?",
+    ["Cheyne-Stokes respiration", "Biot's respiration (ataxic breathing)", "Kussmaul breathing", "All of the above"],
+    0,
+    "Cheyne-Stokes respiration is a central respiratory disorder characterized by waxing and waning tidal volumes, listed in heart failure guidelines. However, it can also occur with CNS disease or drug toxicity. Kussmaul breathing is regular and deep, while Biot's is irregular with transient apnea."
+  ],
+  [
+    "Q32: Which of the following is <span class='underline'>incorrect</span> regarding Cheyne-Stokes respiration in heart failure?",
+    ["High sensitivity", "High specificity", "Tidal volume waxes and wanes, followed by a pause", "One cycle lasts approximately 30 seconds to 2 minutes (apnea ~10-20 seconds)"],
+    0,
+    "Cheyne-Stokes respiration has high specificity but low sensitivity for heart failure. The primary mechanism is thought to be delayed feedback to chemoreceptors due to prolonged circulation time from low cardiac output."
+  ],
+  [
+    "Q33: Which sites should be examined when infective endocarditis is suspected?",
+    ["Conjunctiva", "Oral cavity", "Distal extremities (including nail beds)", "All of the above"],
+    3,
+    "In a patient with persistent fever and suspected infective endocarditis, peripheral signs of emboli or immune reactions should be checked before echocardiography."
+  ],
+  [
+    "Q34: Left palpebral conjunctiva in a patient with persistent fever<br><img src='q34.png' style='width:100%; max-width:600px; height:auto;' alt='Left palpebral conjunctiva'><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["Petechiae are present", "Usually painless", "A peripheral sign reflecting septic emboli", "High sensitivity for infective endocarditis"],
+    3,
+    "Conjunctival hemorrhage has low sensitivity (~30%) for infective endocarditis but high specificity. It is listed as a minor criterion in the Duke-ISCVID diagnostic criteria."
+  ],
+  [
+    "Q35: Patient with persistent fever presenting with a tender lesion<br><img src='q35.png' style='width:100%; max-width:600px; height:auto;' alt='Left palm'><br>Which of the following is correct?",
+    ["Osler's node is suspected", "Reflects immune-mediated microvasculitis", "Can occur in infective endocarditis", "All of the above"],
+    3,
+    "This is a painful raised erythematous lesion called an Osler's node, listed as a minor clinical criterion in the Duke-ISCVID criteria for infective endocarditis."
+  ],
+  [
+    "Q36: Which of the following is correct regarding Osler's nodes?",
+    ["Infrequent but highly disease-specific", "Predominantly found at the distal extremities", "It is important to check for tender areas of the hands and feet", "All of the above"],
+    3,
+    "To avoid missing small lesions, the painful character of Osler's nodes should be fully utilized — patients themselves are often aware of them."
+  ],
+  [
+    "Q37: A cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q37.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span> regarding this murmur?",
+    ["It is a systolic murmur", "The intensity crescendos then decrescendos", "S1 and S2 are buried within the murmur", "A typical cause is aortic stenosis"],
+    2,
+    "In a systolic ejection murmur, S1 and S2 are usually still audible. In contrast, in a systolic regurgitant murmur, S1 and S2 are typically buried within the murmur."
+  ],
+  [
+    "Q38: Which of the following is correct regarding a murmur suggesting aortic stenosis?",
+    ["A systolic ejection murmur", "Audible over a wide area of the precordium", "Radiation to the clavicles and neck", "All of the above"],
+    3,
+    "The radiation of the murmur clearly to the neck and clavicles is a hallmark of aortic stenosis that helps distinguish it from other conditions. Clavicular auscultation is particularly convenient (less respiratory noise than the neck — breath-holding not required)."
+  ],
+  [
+    "Q39: A cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q39.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["It is a systolic murmur", "The murmur intensity crescendos then decrescendos", "S1 and S2 are buried within the murmur", "A typical cause is mitral regurgitation"],
+    1,
+    "This is a systolic regurgitant murmur with roughly constant intensity throughout systole. Conditions producing this murmur pattern are essentially limited to mitral regurgitation, tricuspid regurgitation, and ventricular septal defect."
+  ],
+  [
+    "Q40: Which of the following is correct regarding a murmur suggesting mitral regurgitation?",
+    ["A systolic regurgitant murmur", "Point of maximal intensity at or near the apex", "Minimal radiation to the clavicle", "All of the above"],
+    3,
+    "The murmur of aortic stenosis radiates readily to the clavicle and neck, while the murmur of mitral regurgitation does not. Clavicular auscultation is therefore useful for distinguishing the two (less respiratory noise than auscultation of the neck)."
+  ],
+  [
+    "Q41: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q41.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Systolic murmur", "Diastolic murmur", "To-and-fro murmur", "Continuous murmur"],
+    0,
+    "This patient has aortic stenosis with a systolic ejection (crescendo-decrescendo, diamond-shaped) murmur. The murmur radiates to the neck and clavicles."
+  ],
+  [
+    "Q42: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q41.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["S1 is audible", "S2 is audible", "The murmur radiates to the clavicle", "All of the above"],
+    3,
+    "In aortic stenosis, the murmur typically radiates to the clavicle, making clavicular auscultation useful for differentiating from mitral regurgitation (either side is acceptable)."
+  ],
+  [
+    "Q43: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q43.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Systolic murmur", "Diastolic murmur", "To-and-fro murmur", "Continuous murmur"],
+    0,
+    "This patient has mitral regurgitation with a systolic regurgitant (plateau-shaped, non-crescendo-decrescendo) murmur. Clavicular radiation is not prominent."
+  ],
+  [
+    "Q44: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q43.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["S1 is audible", "S2 is audible", "The murmur radiates to the clavicle", "S1 and S2 are buried within the murmur"],
+    3,
+    "In mitral regurgitation, the heart sounds are often obscured by the murmur, and clavicular radiation is minimal — helping distinguish it from aortic stenosis."
+  ],
+  [
+    "Q45: Which symptom is typical of low output/tissue hypoperfusion in heart failure?",
+    ["Fatigue", "Malaise", "Reduced exercise tolerance", "All of the above"],
+    3,
+    "Atypical symptoms listed in the guidelines include dizziness/syncope, cognitive impairment, delirium, and depression."
+  ],
+  [
+    "Q46: Which physical finding is associated with low output/tissue hypoperfusion in heart failure?",
+    ["Cheyne-Stokes respiration", "Cool peripheries", "Muscle wasting/cachexia", "All of the above"],
+    3,
+    "Other findings listed in the guidelines include narrow pulse pressure, reduced urine output, and weight loss."
+  ],
+  [
+    "Q47: In the Nohria-Stevenson classification used to assess heart failure hemodynamics, which profile has the worst prognosis?",
+    ["A: no congestion + no hypoperfusion (dry-warm)", "B: congestion + no hypoperfusion (wet-warm)", "C: congestion + hypoperfusion (wet-cold)", "L: no congestion + hypoperfusion (dry-cold)"],
+    2,
+    "In the original report (J Am Coll Cardiol 2003;41:1797-804), prognosis was worst in the order A, L, B, C."
+  ],
+  [
+    "Q48: Which physical finding suggests hypoperfusion in the Nohria-Stevenson classification?",
+    ["Narrow pulse pressure", "Cool extremities", "Somnolence", "All of the above"],
+    3,
+    "Narrow pulse pressure is defined as (SBP - DBP)/SBP < 25%. Laboratory markers include hyponatremia (Na <135 mEq/L) and worsening renal function."
+  ],
+  [
+    "Q49: Which oral cavity finding should be sought when infective endocarditis is suspected?",
+    ["Mucosal hemorrhage", "Dental caries", "Poor dental hygiene", "All of the above"],
+    3,
+    "All of these findings are associated with infective endocarditis or its risk. In a febrile patient with suspected endocarditis, the oral cavity should be examined before echocardiography."
+  ],
+  [
+    "Q50: Oral cavity findings in an elderly patient with persistent fever<br><img src='q50.jpeg' style='width:100%; max-width:600px; height:auto;' alt='Oral cavity'><br>Which of the following is correct?",
+    ["Petechiae are present", "An ulcer is present", "A tumor is present", "No abnormality"],
+    0,
+    "Small petechiae scattered over the mucosa should not be overlooked. This patient was ultimately diagnosed with methicillin-resistant Staphylococcus aureus infective endocarditis of the mitral valve."
+  ],
+  [
+    "Q51: Right toe in a patient with persistent fever (non-tender)<br><img src='q51.png' style='width:100%; max-width:600px; height:auto;' alt='Right toe'><br>Which of the following is correct?",
+    ["Erythema on the plantar surface of the 2nd toe", "Can occur in infective endocarditis", "Called a Janeway lesion", "All of the above"],
+    3,
+    "Janeway lesions — reflecting septic vascular emboli — are listed as minor clinical criteria in the Duke-ISCVID criteria for infective endocarditis."
+  ],
+  [
+    "Q52: Which of the following is <span class='underline'>incorrect</span> regarding Janeway lesions?",
+    ["Predominantly found at the distal extremities", "Sensitivity for infective endocarditis is not necessarily high", "High specificity for infective endocarditis", "Painful"],
+    3,
+    "Osler's nodes are painful because they reflect immune-mediated microvasculitis. In contrast, Janeway lesions are painless, reflecting septic vascular emboli."
+  ],
+  [
+    "Q53: Patient with decompensated heart failure (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q53.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Periodic depression in the right supraclavicular fossa", "Periodic depression in the left supraclavicular fossa", "Similar findings can be seen in healthy individuals", "Right atrial pressure is within the normal range"],
+    0,
+    "The seated qualitative method for jugular venous assessment uses the right side. The left internal jugular vein lacks a straight anatomical relationship with the right atrium, so right atrial pressure cannot be accurately transmitted."
+  ],
+  [
+    "Q54: Patient presenting with exertional dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q54.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Pulsation visible from the right neck to the earlobe", "Right atrial pressure is markedly elevated", "Decompensated heart failure is considered", "All of the above"],
+    3,
+    "The higher the upper border of internal jugular pulsation, the greater the right atrial pressure. When pulsation reaches the earlobe, as in this patient, it is called the 'ear wink sign' and suggests severe heart failure."
+  ],
+  [
+    "Q55: Patient with severe tricuspid regurgitation (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q55.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["Internal jugular pulsations are outward (positive waves)", "Internal jugular pulsations are inward (negative deflections)", "Outward pulsations require differentiation from arterial pulsation", "Distension of the external jugular vein"],
+    1,
+    "Internal jugular pulsations are usually inward (negative), but when right atrial pressure is markedly elevated they may become outward (Lancisi's sign). Differentiation from carotid arterial pulsation is required (e.g., Lancisi's sign easily obliterated by gentle manual compression)."
+  ],
+  [
+    "Q56: Patient with severe aortic regurgitation (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q56.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Rapid rise and collapse of the carotid artery", "Reflects a large stroke volume", "Difficult to obliterate with gentle manual pressure", "All of the above"],
+    3,
+    "This type of carotid pulsation is called Corrigan's pulse (also visible on the left side, unlike jugular pulsations). This patient also demonstrates head bobbing (de Musset's sign). Both can occur with severe aortic regurgitation."
+  ],
+  [
+    "Q57: Patient presenting with exertional dyspnea<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q57.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which disease is suspected?",
+    ["Cardiac amyloidosis", "Hypertrophic cardiomyopathy", "Aortic stenosis", "Hypertensive heart disease"],
+    0,
+    "Carpal tunnel syndrome makes it difficult to form a perfect circle with the thumb and index finger (loss of the 'OK sign'). Carpal tunnel syndrome is not uncommonly associated with transthyretin (ATTR) cardiac amyloidosis."
+  ],
+  [
+    "Q58: Which physical finding is associated with transthyretin (ATTR) cardiac amyloidosis?",
+    ["Difficulty making the OK sign", "Popeye sign", "Absence of S4", "All of the above"],
+    3,
+    "The OK sign (forming a perfect circle with thumb and index finger) is impaired by carpal tunnel syndrome. The Popeye sign (biceps muscle prominence on elbow flexion) results from tendon rupture due to amyloid deposition. The absence of S4 despite hypertrophy is attributed to amyloid deposition in the atria."
+  ],
+  [
+    "Q59: Patient with dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q60.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which hemodynamic state is suspected?",
+    ["No heart failure", "Mild heart failure", "Severe heart failure", "Cannot determine"],
+    2,
+    "The upper border of internal jugular pulsation reaches the mandible in the seated position, indicating severely elevated right atrial pressure — consistent with decompensated heart failure. The outward (positive) pulsation requires exclusion of arterial pulsation (Corrigan's pulse) by palpation."
+  ],
+  [
+    "Q60: Patient with dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q60.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is suspected?",
+    ["Atrial fibrillation", "Ischemic heart disease", "Prior open-heart surgery", "All of the above"],
+    3,
+    "The irregular pulsation suggests atrial fibrillation. The earlobe crease (Frank's sign) raises suspicion of coronary artery disease, and the surgical scar on the anterior chest (vertical line, lower right) is suggestive of prior cardiac surgery (coronary artery bypass grafting). Inspection alone can reveal so much."
+  ],
+  [
+    "Q61: Which of the following is correct regarding bendopnea?",
+    ["Unrelated to heart failure", "Occurs with systemic congestion only", "Occurs with pulmonary congestion only", "Can occur with either systemic or pulmonary congestion"],
+    3,
+    "Bendopnea is dyspnea that occurs when bending forward, such as when tying shoelaces. It is one of the typical heart failure symptoms and can occur with both systemic and pulmonary congestion."
+  ],
+  [
+    "Q62: Which of the following is correct regarding bendopnea?",
+    ["Not a frequent symptom", "Mechanism involves further elevation of atrial pressure on bending", "Often occurs within about 10 seconds of bending", "All of the above"],
+    3,
+    "The mechanism of bendopnea is further elevation of right atrial pressure and pulmonary capillary wedge pressure on bending — particularly with reduced cardiac output. It is not always frequent but should be assessed in patients with suspected heart failure."
+  ],
+  [
+    "Q63: Which physical finding is correct regarding mitral regurgitation?",
+    ["Apical impulse displaced laterally", "Holosystolic murmur", "S3", "All of the above"],
+    3,
+    "Inspection and palpation reveal lateral and downward displacement of the apical impulse due to left ventricular enlargement. Auscultation reveals a holosystolic murmur and S3. (From guidelines)"
+  ],
+  [
+    "Q64: Which of the following is correct regarding the murmur of mitral regurgitation?",
+    ["In prolapse, intensity increases in late systole", "In acute severe cases, the murmur is diamond-shaped", "In severe cases, a mid-diastolic rumble (Carey Coombs murmur)", "All of the above"],
+    3,
+    "The murmur of mitral regurgitation is basically a plateau-shaped holosystolic murmur, but its character is varied and may present as described above."
+  ],
+  [
+    "Q65: Which of the following is correct regarding auscultation in mitral stenosis (MS)?",
+    ["Loud S1", "Opening snap", "Mid-diastolic rumble at the apex", "All of the above"],
+    3,
+    "These findings combine to create the characteristic 'MS melody' rhythm (S1-opening snap-rumble). However, as stenosis worsens, valve mobility decreases and the opening snap disappears."
+  ],
+  [
+    "Q66: Which physical finding is correct regarding tricuspid regurgitation?",
+    ["Outward jugular venous pulsations", "Holosystolic murmur at the left sternal border", "Lower extremity edema", "All of the above"],
+    3,
+    "The Rivero-Carvallo sign — increased murmur intensity on inspiration — is well known. As tricuspid regurgitation worsens, the holosystolic murmur may become decrescendo or disappear entirely."
+  ],
+  [
+    "Q67: Which of the following is <span class='underline'>incorrect</span> regarding physical findings in chronic aortic regurgitation?",
+    ["Lateral displacement of the apical impulse", "Diastolic murmur", "Decreased pulse pressure", "Bisferious carotid pulse"],
+    2,
+    "In chronic aortic regurgitation, systolic BP rises and diastolic BP falls, resulting in an increased pulse pressure. In contrast, in acute aortic regurgitation, these physical findings are often absent."
+  ],
+  [
+    "Q68: Which physical finding is characteristic of chronic aortic regurgitation?",
+    ["de Musset's sign", "Corrigan's pulse", "Quincke's sign", "All of the above"],
+    3,
+    "Guidelines list de Musset's sign (head bobbing), Corrigan's pulse (rapid carotid rise and collapse), Quincke's sign (nail bed capillary pulsation), and Traube's sign (pistol-shot sounds over the femoral artery)."
+  ],
+  [
+    "Q69: Which physical finding is correct regarding aortic stenosis?",
+    ["Systolic ejection murmur", "Slow-rising carotid pulse", "Carotid shudder (vibration)", "All of the above"],
+    3,
+    "The characteristic radiation of the murmur to the clavicle and neck is a hallmark of aortic stenosis. Note that murmur intensity alone is a poor indicator of severity (in some severe cases, low stroke volume reduces murmur intensity)."
+  ],
+  [
+    "Q70: Where is the point of maximal intensity of the murmur of aortic stenosis?",
+    ["Right sternal border, 2nd intercostal space", "Left sternal border, 3rd intercostal space", "Cardiac apex", "No fixed location"],
+    3,
+    "The murmur of aortic stenosis is audible over a wide area from the right 2nd intercostal space to the apex (the so-called 'sash area'). In contrast, the murmur of mitral regurgitation typically has its point of maximal intensity near the apex."
+  ],
+  [
+    "Q71: Which physical finding can be present in hypertrophic cardiomyopathy?",
+    ["S4", "Rapid-rising carotid pulse", "Bifid apical impulse", "All of the above"],
+    3,
+    "S4 is heard frequently in HCM regardless of obstruction. This is because forceful atrial contraction rapidly elevates LV pressure and simultaneously vibrates the stiff ventricular wall. A palpable A wave at the apex may combine with a sustained apical impulse to create a bifid pattern."
+  ],
+  [
+    "Q72: Which physical finding can be present in obstructive HCM?",
+    ["Single S2 or paradoxical splitting", "Bisferious carotid pulse", "Systolic ejection murmur", "All of the above"],
+    3,
+    "In obstructive HCM with LVOT obstruction, prolonged ejection time causes S2 to become single, and some cases show paradoxical splitting. The carotid pulse may have a spike-and-dome (bisferious) pattern."
+  ],
+  [
+    "Q73: Which type of cyanosis is seen in pulmonary hypertension?",
+    ["Central", "Peripheral", "Mixed", "All of the above"],
+    3,
+    "Cyanosis is classified as central (reduced arterial oxygen saturation), peripheral (normal arterial saturation with impaired peripheral circulation), and mixed. All three can occur in pulmonary hypertension."
+  ],
+  [
+    "Q74: Which auscultatory finding can be present in pulmonary hypertension?",
+    ["Accentuated pulmonic component of S2", "High-pitched diastolic murmur at the upper left sternal border", "Systolic murmur at the lower left sternal border", "All of the above"],
+    3,
+    "Pulmonary regurgitation due to pulmonary hypertension can produce a high-pitched diastolic murmur at the upper left sternal border (Graham Steell murmur). Tricuspid regurgitation is also common, producing a holosystolic murmur at the lower left sternal border."
+  ],
+  [
+    "Q75: Which type of parasternal impulse is characteristic of pulmonary hypertension?",
+    ["Not palpable", "Tapping", "Heaving (sustained)", "Bifid"],
+    2,
+    "The parasternal impulse is not palpable in healthy individuals, but becomes palpable as the right ventricle enlarges. A sustained (heaving) right ventricular impulse suggests right ventricular systolic pressure ≥60 mmHg. However, sensitivity is not always high — a negative finding does not rule out pulmonary hypertension."
+  ],
+  [
+    "Q76: Which finding is present in advanced pulmonary hypertension?",
+    ["Hepatomegaly or ascites", "Lower extremity edema", "Cool extremities", "All of the above"],
+    3,
+    "Right heart failure produces hepatomegaly, lower extremity edema, and ascites. As peripheral circulatory failure from low cardiac output worsens, cool extremities and peripheral cyanosis emerge."
+  ],
+  [
+    "Q77: Which of the following is <span class='underline'>incorrect</span> regarding cyanosis?",
+    ["Bluish-purple discoloration of the skin and mucous membranes", "Appears when capillary reduced Hb ≥5 g/dL", "Classified as central or peripheral", "Specific for hypoxemia"],
+    3,
+    "Cyanosis is not specific for hypoxemia (e.g., CO poisoning causes hypoxemia without cyanosis). Cyanosis is also classified as 'hemic' due to abnormal hemoglobin (e.g., methemoglobinemia)."
+  ],
+  [
+    "Q78: Which of the following is <span class='underline'>incorrect</span> regarding cyanosis?",
+    ["Central cyanosis appears throughout the body", "Peripheral cyanosis is limited to the distal extremities", "In peripheral cyanosis, arterial oxygen saturation is reduced", "In differential cyanosis, severity differs between upper and lower body"],
+    2,
+    "In central cyanosis, oxygen saturation is reduced in arteries, capillaries, and veins. In peripheral cyanosis, capillary and venous saturation are reduced but arterial saturation is normal. The classic example of differential cyanosis is Eisenmenger's syndrome due to patent ductus arteriosus (cyanosis predominant in lower body)."
+  ],
+  [
+    "Q79: Phonocardiogram from a healthy individual<br><img src='q79.jpg' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["Black trace (top) = ECG", "Green trace (middle) = phonocardiogram", "Red trace (bottom) = jugular venous pulse", "Red trace (bottom) = carotid arterial pulse"],
+    3,
+    "The normal jugular venous pulse consists of three positive waves (a, c, v) and two negative deflections (x, y). The carotid artery is generally felt as an outward pulsation, while the jugular vein is most often visualized as a bifid inward movement (x and y descents)."
+  ],
+  [
+    "Q80: Normal jugular venous waveform<br><img src='q79.jpg' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["a wave → right ventricular contraction", "c wave → bulging of the tricuspid valve toward the right atrium", "x descent → right atrial relaxation", "v wave → right atrial filling from venous return"],
+    0,
+    "The a wave is primarily generated by right atrial (not right ventricular) contraction. The y descent reflects the fall in right atrial pressure following tricuspid valve opening, though it may not be prominent in all patients."
+  ],
+  [
+    "Q81: Patient presenting with a cardiac murmur and dyspnea<br><img src='q81.png' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which of the following is correct?",
+    ["Black trace (top) = phonocardiogram", "Blue trace (middle) = ECG", "Red trace (bottom) = jugular venous pulse", "Red trace (bottom) = carotid arterial pulse"],
+    3,
+    "The carotid arterial pulse rises near the onset of LV contraction (near the R wave) and shows a notch just after aortic valve closure (S2). The jugular vein is typically seen as an inward movement, whereas the carotid artery is felt as an outward pulsation."
+  ],
+  [
+    "Q82: Patient presenting with exertional dyspnea<br><img src='q81.png' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which disease is suspected?",
+    ["Non-obstructive HCM", "Obstructive HCM", "Apical HCM", "Dilated-phase HCM"],
+    1,
+    "This carotid pulse shows a rapid initial rise (spike) followed by a secondary smaller dome — a bisferious (spike-and-dome) pattern characteristic of obstructive HCM. The co-existing S4 and systolic ejection murmur are also consistent with this diagnosis."
+  ],
+  [
+    "Q83: Patient referred for an ECG abnormality<br><img src='q83.jpg' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>What does the bottom trace represent?",
+    ["Phonocardiogram", "Carotid arterial pulse", "Jugular venous pulse", "Apexcardiogram"],
+    3,
+    "The bottom trace is the apexcardiogram. It shows an abnormal bifid pattern with a slow-filling wave followed by an atrial contraction (A) wave and a sustained impulse — consistent with a 'double impulse' pattern."
+  ],
+  [
+    "Q84: Patient presenting with a cardiac murmur and dyspnea<br><img src='q83.jpg' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which disease is suspected from the phonocardiogram?",
+    ["Non-obstructive HCM", "Apical HCM", "Mid-ventricular obstructive HCM", "All of the above"],
+    3,
+    "In HCM, S4 is common regardless of the phenotype (hypertrophy distribution), and a bifid apical impulse is frequently present. Obstructive HCM produces a prominent ejection murmur, while mid-ventricular obstructive HCM may have a less distinct murmur."
+  ],
+  [
+    "Q85: Patient presenting with dyspnea and a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q86.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["Systolic murmur", "Rapid-rising carotid pulse", "Carotid shudder", "Crescendo-decrescendo murmur"],
+    1,
+    "A loud systolic ejection murmur is present, with a slow-rising carotid pulse (pulsus parvus et tardus) and a fine vibration (shudder wave) — all findings consistent with aortic stenosis."
+  ],
+  [
+    "Q86: Patient presenting with dyspnea and a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q86.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which disease is suspected?",
+    ["Aortic stenosis (mild)", "Aortic stenosis (severe)", "Hypertrophic cardiomyopathy", "Aortic regurgitation"],
+    1,
+    "A systolic ejection murmur with a diminished S2, slow-rising carotid pulse, and shudder wave all suggest severe aortic stenosis. HCM and AR typically show rapid-rising carotid pulses."
+  ],
+  [
+    "Q87: Patient referred for left ventricular hypertrophy on echocardiography<br><img src='q87.png' style='width:100%; max-width:600px; height:auto;' alt='Upper arm'><br>Which disease is suspected?",
+    ["Hypertrophic cardiomyopathy", "Aortic stenosis", "Cardiac amyloidosis", "Fabry disease"],
+    2,
+    "On elbow flexion, a focal bulge appears slightly distal to the center of the upper arm — resembling a famous cartoon character, hence the term 'Popeye sign.' This is caused by biceps tendon rupture and is not uncommonly associated with ATTR cardiac amyloidosis (reduced tensile strength from amyloid deposition in tendons)."
+  ],
+  [
+    "Q88: Patient presenting with dyspnea<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q88.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Corrigan's pulse", "Lancisi's sign", "Quincke's sign", "All of the above"],
+    2,
+    "Periodic color changes in the nail bed with compression reflect a large pulse — Quincke's sign. This is commonly seen in aortic regurgitation in clinical practice."
+  ],
+  [
+    "Q89: Patient presenting with reduced appetite and lower extremity edema<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q89.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which hemodynamic state is suspected?",
+    ["Pulmonary hypertension", "Portal hypertension", "Essential hypertension", "All of the above"],
+    0,
+    "Vigorous up-and-down movement of the entire chest wall is visible — this is a heaving parasternal impulse caused by an enlarged right ventricle pressing broadly against the posterior sternum due to pulmonary hypertension. Estimated pulmonary artery systolic pressure in this patient was approximately 80 mmHg."
+  ],
+  [
+    "Q90: Patient referred for an ECG abnormality<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q90.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which disease is suspected?",
+    ["Colorectal cancer", "Ileus", "Urinary retention", "Abdominal aortic aneurysm"],
+    3,
+    "A regular pulsation — distinct from respiratory abdominal movement — is visible (note the examiner's finger). Subsequent CT revealed an infrarenal abdominal aortic aneurysm with a maximal short-axis diameter of 70 mm. As this is typically asymptomatic, abdominal palpation should be performed at every initial visit."
+  ],
+  [
+  "Q91: Heart sounds from a healthy individual<br><audio id='audio1' controls src='q91_2L.mp3' onplay='audio2.pause();'></audio><br><audio id='audio2' controls src='q91_apex.mp3' onplay='audio1.pause();'></audio><br>Which is the correct pairing?",
+    ["Top: cardiac base, Bottom: cardiac apex", "Top: cardiac apex, Bottom: cardiac base", "Both from the cardiac apex", "Both from the cardiac base"],
+    0,
+    "In healthy individuals, S1 is lower pitched and longer and is more prominent at the apex, while S2 is higher pitched and shorter and is more prominent at the base. This pattern should be memorized by ear."
+  ],
+  [
+    "Q92: Patient presenting with worsening renal function<br><img src='q92.jpg' style='width:100%; max-width:600px; height:auto;' alt='Toes'><br>Which condition is suspected?",
+    ["Blue toe syndrome", "Arteriosclerosis obliterans", "Stasis dermatitis", "Deep vein thrombosis of the lower extremities"],
+    0,
+    "Purple-black discoloration is visible on the right 4th toe and left 3rd and 5th toes. Blue toe syndrome is caused by cholesterol crystal embolism. This patient had undergone cardiac catheterization shortly before."
+  ],
+  [
+    "Q93: Patient presenting with exertional dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q93.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which condition is suspected?",
+    ["Decompensated heart failure", "Aortic stenosis", "Aortic regurgitation", "Chronic obstructive pulmonary disease (COPD)"],
+    3,
+    "Prominent hypertrophy of the sternocleidomastoid muscles and supraclavicular/suprasternal retractions on inspiration are visible. In lung diseases such as COPD, sternocleidomastoid hypertrophy, retractions, tracheal tug, prolonged expiration, and Hoover's sign (inward movement of the costal margins on inspiration) may all be present."
+  ],
+  [
+    "Q94: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q94.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Systolic murmur", "Diastolic murmur", "To-and-fro murmur", "Continuous murmur"],
+    3,
+    "The systolic murmur continues smoothly into diastole. Unlike a to-and-fro murmur, there is no change in character around S2. Note that a continuous murmur does not necessarily persist throughout the entire cardiac cycle."
+  ],
+  [
+    "Q95: Patient referred for evaluation of a cardiac murmur<br><audio controls id='sampleAudio' src='q95.mp3'></audio><br>Which of the following is correct?",
+    ["Diastolic murmur", "Decrescendo murmur", "Blowing murmur", "All of the above"],
+    3,
+    "This is a typical murmur of aortic regurgitation. A short systolic ejection murmur is also present, making it strictly a to-and-fro murmur. Note the ejection sound immediately after S1 — this can occur in various conditions, but in clinical practice a bicuspid aortic valve is common."
+  ],
+  [
+    "Q96: Young patient with a cardiac murmur<br><img src='q96.jpg' style='width:100%; max-width:600px; height:auto;' alt='Fingers'><br>Which valvular disease is suspected?",
+    ["Aortic regurgitation", "Aortic stenosis", "Mitral regurgitation", "Mitral stenosis"],
+    0,
+    "This is the thumb sign (Steinberg sign): when the thumb is enclosed in the fist, the tip protrudes beyond the ulnar border. It can be seen in Marfan syndrome and other heritable aortic diseases. Aortic regurgitation in this setting results from aortic root dilatation."
+  ],
+  [
+    "Q97: Male patient hospitalized with heart failure<br><img src='q97.jpg' style='width:100%; max-width:600px; height:auto;' alt='Lower leg'><br>Which condition is suspected?",
+    ["Sarcopenia", "Cardiac cachexia", "Severe heart failure", "All of the above"],
+    3,
+    "Positive calf circumference test (a circle made by the thumb and index finger is larger than the maximum calf circumference). This indicates reduced skeletal muscle mass and fat in the calf — in a heart failure patient, this suggests advanced cachexia."
+  ],
+  [
+    "Q98: Patient with recurrent heart failure hospitalizations<br><img src='q98.jpeg' style='width:100%; max-width:600px; height:auto;' alt='Hand'><br>What is the Nohria-Stevenson classification?",
+    ["No hypoperfusion (warm)", "Hypoperfusion present (cold)", "No congestion (dry)", "Congestion present (wet)"],
+    1,
+    "The nail beds are pale with cyanosis, and the palm is whitish with prominent veins. Extremely cold peripheries (cold) like this are associated with poor prognosis. This finding alone cannot determine the presence or absence of congestion (dry vs. wet)."
+  ],
+  [
+    "Q99: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q99.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which valvular disease is most likely?",
+    ["Tricuspid regurgitation", "Mitral regurgitation", "Pulmonic regurgitation", "Aortic regurgitation"],
+    3,
+    "Regular pulsation of the brachial artery is visible on inspection (more prominent on elbow flexion). This reflects a large stroke volume — also called a water-hammer pulse or Corrigan's pulse in the peripheral vessel context. Subsequent echocardiography confirmed severe aortic regurgitation."
+  ],
+  [
+    "Q100: Patient presenting with dyspnea (recorded at the elbow, no cuff)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q100.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which disease is most likely?",
+    ["Aortic stenosis (mild)", "Aortic stenosis (severe)", "Aortic regurgitation (mild)", "Aortic regurgitation (severe)"],
+    3,
+    "This sharp sound is called a pistol-shot sound and can be heard in severe aortic regurgitation. It is thought to be related to the sudden rise in peripheral arterial pressure from a large stroke volume. The pistol-shot sound in this patient disappeared after aortic valve replacement."
+  ]  /* No comma after the last question */
+];
+
+/* ===== LOGIC ===== */
+let i=0,score=0,startTime=0,correct=0,order=[];
+
+
+// ===== PRACTICE MODE =====
+let mode = "challenge";   // "challenge" or "practice"
+let practiceCount = 0;
+const PRACTICE_LIMIT = 10;
+
+
+
+function start() {
+
+  // ===============================
+  // ★ 状態リセット（最重要）
+  // ===============================
+  mode = "challenge";
+  reviewMode = false;
+  finish._done = false;
+
+  // UI初期化
+  nextBtn.classList.add("hidden");
+  resultBtn.classList.add("hidden");
+  meisterBtn.classList.add("hidden");
+  msg.textContent = "";
+  exp.textContent = "";
+  bar.style.width = "0%";
+
+  // ===============================
+  startSound();
+
+  entry.classList.add("hidden");
+  quiz.classList.remove("hidden");
+
+  i = 0;
+  score = 0;
+  startTime = Date.now();
+
+  order = Array.from({ length: Q.length }, (_, idx) => idx)
+               .sort(() => Math.random() - 0.5);
+
+  show();
+}
+
+
+// ===== PRACTICE MODE =====
+function startPractice() {
+
+  mode = "practice";
+  reviewMode = false;
+
+  practiceCount = 0;   // ★ required
+
+  entry.classList.add("hidden");
+  quiz.classList.remove("hidden");
+
+  i = 0;
+  score = 0;
+
+  const PRACTICE_NUM = 10;
+
+  order = Array.from({ length: Q.length }, (_, idx) => idx)
+               .sort(() => Math.random() - 0.5)
+               .slice(0, PRACTICE_NUM);
+
+  show();
+}
+
+
+
+// Basic tone function
+function playTone(frequency, duration){
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.frequency.value = frequency;
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+}
+
+// Sound at quiz start
+function startSound(){
+  if (soundEnabled) {
+    playTone(440, 0.15); // A4
+    setTimeout(()=>playTone(523, 0.15), 150); // C5
+    setTimeout(()=>playTone(659, 0.2), 300); // E5
+    }
+}
+
+// Beginner rank (light celebratory tone)
+function celebrateBeginner(){
+  if (soundEnabled) {
+    playTone(440,0.2); // A4
+    setTimeout(()=>playTone(523,0.2), 200); // C5
+    }
+}
+
+// Intermediate rank (upbeat tone)
+function celebrateMiddle(){
+  if (soundEnabled) {
+    playTone(523,0.2); // C5
+    setTimeout(()=>playTone(659,0.2), 200); // E5
+    setTimeout(()=>playTone(784,0.2), 400); // G5
+    }
+}
+
+// Advanced rank (bright, extended tone)
+function celebrateAdvanced(){
+  if (soundEnabled) {
+    playTone(523,0.2); // C5
+    setTimeout(()=>playTone(659,0.2), 200); // E5
+    setTimeout(()=>playTone(784,0.3), 400); // G5
+    setTimeout(()=>playTone(880,0.3), 700); // A5
+    }
+}
+
+// Meister rank (grand finish with high C)
+function celebrateMeister(){
+  if (soundEnabled) {
+    playTone(523, 0.2);  // C5
+    setTimeout(()=>playTone(659, 0.2), 200); // E5
+    setTimeout(()=>playTone(784, 0.3), 400); // G5
+    setTimeout(()=>playTone(880, 0.3), 700); // A5
+    setTimeout(()=>playTone(987, 0.3), 1000); // B5
+    setTimeout(()=>playTone(1046, 0.4), 1300); // C6
+    }
+}
+
+// Action on icon click
+document.addEventListener("DOMContentLoaded", () => {
+  const topIcon = document.getElementById("topIcon");
+  const img = topIcon?.querySelector("img");
+
+  if (!img) return;
+
+  img.addEventListener("click", () => {
+    // アニメーションを毎回確実に再発火
+    img.classList.remove("icon-pop");
+    void img.offsetWidth;
+    img.classList.add("icon-pop");
+
+    // Sound effect
+    if (soundEnabled) {
+      tone(900, 0.08);
+      setTimeout(() => tone(1200, 0.08), 90);
+    }
+  });
+});
+
+  // Mute button
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+
+  // 🔓 ユーザー操作で AudioContext を有効化
+  if (soundEnabled && ctx.state === "suspended") {
+    ctx.resume();
+  }
+
+  const btn = document.getElementById("soundBtn");
+  btn.textContent = soundEnabled ? "🔊 Sound ON" : "🔇 Sound OFF";
+}
+
+
+  // Display question
+function show() {
+
+  msg.textContent = "";
+  exp.textContent = "";
+
+  nextBtn.classList.add("hidden");
+  resultBtn.classList.add("hidden");
+  meisterBtn.classList.add("hidden");
+  answerBtn.classList.remove("hidden");
+
+  // ==========================
+  // Progress bar
+  // ==========================
+  if (reviewMode) {
+
+    // 🔁 Review mode: based on wrong question count
+    bar.classList.remove("practice-bar");
+
+    bar.style.width =
+      (i / order.length * 100) + "%";
+
+  } else if (mode === "practice") {
+
+    // 🟡 Practice mode: 10 questions
+    bar.classList.add("practice-bar");
+
+    bar.style.width =
+      (practiceCount / PRACTICE_LIMIT * 100) + "%";
+
+  } else {
+
+    // 🔴 Exam mode: total questions
+    bar.classList.remove("practice-bar");
+
+    bar.style.width =
+      (i / Q.length * 100) + "%";
+  }
+
+  // ==========================
+  // Status display
+  // ==========================
+  status.textContent = `Score: ${score}`;
+
+  // ==========================
+  // Display question
+  // ==========================
+  const q = Q[order[i]];
+  question.innerHTML = q[0];
+
+  let arr = q[1].map((t, idx) => ({
+    t,
+    ok: idx === q[2]
+  }));
+
+  let special = arr.filter(o => o.t === "All of the above");
+  let normal  = arr.filter(o => o.t !== "All of the above");
+
+  normal.sort(() => Math.random() - 0.5);
+  arr = [...normal, ...special];
+
+  // ==========================
+  // Generate choices
+  // ==========================
+  choices.innerHTML = "";
+
+  arr.forEach((o, idx) => {
+    if (o.ok) correct = idx;
+
+    const l = document.createElement("label");
+    l.className = "choice";
+    l.innerHTML =
+      `<input type="radio" name="a" value="${idx}"> ${o.t}`;
+
+    choices.appendChild(l);
+  });
+}
+
+
+
+function check() {
+
+  // Prevent double execution
+  if (answerBtn.classList.contains("hidden")) return;
+
+  click();
+
+  const s = document.querySelector("input[name=a]:checked");
+  if (!s) return;
+
+  // Lock UI after answer
+  answerBtn.classList.add("hidden");
+
+  const c = document.querySelectorAll(".choice");
+  c.forEach(x => x.style.pointerEvents = "none");
+
+  // Show correct answer
+  c[correct].classList.add("correct");
+
+  // ======================
+  // Final question check (all modes)
+  // ======================
+  const lastIndex = order.length - 1;
+  const isLast = (i === lastIndex);
+
+  // ======================
+  // Correct
+  // ======================
+  if (+s.value === correct) {
+
+    ok();
+    score++;
+
+    // 🔁 Review mode: remove correctly answered question
+    if (reviewMode) {
+      const realIndex = order[i];
+      wrongQuestions = wrongQuestions.filter(q => q !== realIndex);
+      saveWrongQuestions();
+      updateReviewButton();
+    }
+
+    msg.textContent = "⭕ Correct!";
+    exp.textContent = "Explanation: " + Q[order[i]][3];
+    c[correct].classList.add("shine");
+
+  }
+
+  // ======================
+  // Incorrect
+  // ======================
+  else {
+
+    ng();
+
+    // 🔴 Record only in exam/practice mode
+    if (!reviewMode) {
+      const realIndex = order[i];
+      if (!wrongQuestions.includes(realIndex)) {
+        wrongQuestions.push(realIndex);
+        saveWrongQuestions();
+        updateReviewButton();
+      }
+    }
+
+    quiz.classList.add("shake");
+    setTimeout(() => quiz.classList.remove("shake"), 400);
+
+    c[s.value].classList.add("wrong");
+
+    msg.textContent = "❌ Incorrect (correct answer highlighted in green)";
+    exp.textContent = "Explanation: " + Q[order[i]][3];
+
+    // 🔴 Exam mode ends immediately
+    if (mode === "challenge") {
+    // ✅ Do not show next question
+    nextBtn.classList.add("hidden");
+
+    // ✅ Show results button only
+    resultBtn.classList.remove("hidden");
+    }
+  }
+
+  // ======================
+  // End check (common to correct/incorrect)
+  // ======================
+  if (isLast) {
+
+    // Final question always 100%
+    bar.style.width = "100%";
+
+    // 🔁 Review mode
+    if (reviewMode) {
+      nextBtn.textContent = "Finish Review";
+      nextBtn.onclick = finishReview;
+      nextBtn.classList.remove("hidden");
+      return;
+    }
+
+    // 🟡 Practice mode
+    if (mode === "practice") {
+      nextBtn.textContent = "Finish Practice";
+      nextBtn.onclick = () => {
+        quiz.classList.add("hidden");
+        entry.classList.remove("hidden");
+      };
+      nextBtn.classList.remove("hidden");
+      return;
+    }
+
+    // 🔴 Exam mode
+    if (mode === "challenge") {
+      finish();
+      return;
+    }
+  }
+
+  // ======================
+  // Next question
+  // ======================
+  // 🔴 Exam mode不正解時は表示しない
+if (mode === "challenge" && +s.value !== correct) {
+  return;
+}
+
+  nextBtn.textContent = "Next Question";
+  nextBtn.onclick = next;
+  nextBtn.classList.remove("hidden");
+
+  // Scroll to explanation
+  document.getElementById("exp")
+    .scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+
+
+
+function next() {
+
+  // ----------------------
+  // Practice mode
+  // ----------------------
+  if (mode === "practice") {
+    practiceCount++;
+    if (practiceCount >= PRACTICE_LIMIT) {
+      finishPractice();
+      return;
+    }
+  }
+
+  // ----------------------
+  // Review mode
+  // ----------------------
+  if (reviewMode) {
+    i++;
+    if (i >= order.length) {
+      finishReview();
+      return;
+    }
+    show();
+    return;
+  }
+
+  // ----------------------
+  // Exam mode
+  // ----------------------
+  i++;
+  show();
+}
+
+
+function finish() {
+
+  // =====================================
+  // Prevent double execution
+  // =====================================
+  if (finish._done) return;
+  finish._done = true;
+
+  // =====================================
+  // Progress bar correction (perfect score)
+  // =====================================
+  if (mode === "challenge" && score === Q.length) {
+    bar.style.width = "100%";
+  }
+
+  // =====================================
+  // Record Meister achievement
+  // =====================================
+  if (score === 100) {
+    localStorage.setItem("meisterCleared", "true");
+  }
+  updateTopIcon();
+
+  // =====================================
+  // Switch display (do not return to top)
+  // =====================================
+  quiz.classList.add("hidden");
+  entry.classList.add("hidden");   // ★ explicitly hide just in case
+  result.classList.remove("hidden");
+
+  // =====================================
+  // Elapsed time
+  // =====================================
+  const t = Math.floor((Date.now() - startTime) / 1000);
+
+  let cls, title, sub, imgSrc;
+
+  // =====================================
+  // Rank determination
+  // =====================================
+  if (score === Q.length * 1) {
+
+    // Perfect score
+    celebrateMeister();
+
+    cls = "meister";
+    title = "Meister Certified";
+    sub = `Date Achieved: ${new Date().toLocaleDateString()}<br>Time: ${Math.floor(t / 60)}m ${t % 60}s`;
+    imgSrc = "gold.gif";
+
+    sub += `
+<br><br>
+<div style="background-color: ivory; border: 5px solid gold;
+            border-radius: 5px; display: inline-block;
+            margin-bottom: 25px; padding: 20px;">
+  <div style="text-align:center; font-size: 18px;
+              margin-top:5px; margin-bottom:20px;">
+    <b>― Words of Wisdom ―</b>
+  </div>
+  <ul class="rule" style="text-align:left; line-height:1.3; padding-left:20px;">
+    <li>Mastery of physical examination alone can bring you close to diagnosing almost every cardiac condition.</li>
+    <li>ECG, chest X-ray, and echocardiography exist to confirm the validity of your physical examination findings.</li>
+    <li>When imaging conflicts with your physical findings, do not immediately accept the test result.</li>
+    <li>The habit of asking why they disagree is what refines your physical examination skills.</li>
+    <li>Sometimes it is the imaging study that is wrong.</li>
+  </ul>
+  <div style="text-align:right; font-size: 16px;
+              margin-top:10px; margin-bottom:5px;">
+    <b>— A Cardiovascular Legend</b>
+  </div>
+</div>
+`;
+
+  } else if (score < 20) {
+
+    celebrateBeginner();
+    cls = "beginner";
+    title = "Beginner";
+    sub = "Never give up!";
+    imgSrc = "green.gif";
+
+  } else if (score < 50) {
+
+    celebrateMiddle();
+    cls = "middle";
+    title = "Intermediate";
+    sub = "Making steady progress!";
+    imgSrc = "blue.gif";
+
+  } else {
+
+    celebrateAdvanced();
+    cls = "advanced";
+    title = "Advanced";
+    sub = "Aim even higher!";
+    imgSrc = "red.gif";
+  }
+
+  // =====================================
+  // Display results
+  // =====================================
+  resultBox.className = `result-box ${cls}`;
+  resultBox.innerHTML = `
+    <img class="medal" src="${imgSrc}" alt="icon">
+    <div class="rank-title">${title}</div>
+    <div class="rank-sub">${sub}</div>
+    <p>Score: ${score} pts</p>
+  `;
+
+  // =====================================
+  // Reset mode
+  // =====================================
+  mode = "challenge";
+  reviewMode = false;
+  finish._done = false;
+}
+
+
+
+function reset() {
+  click(); result.classList.add("hidden");
+  entry.classList.remove("hidden");
+  updateReviewButton();
+// Update score when Try Again is pressed
+const best = Number(localStorage.getItem("bestScore")) || 0;
+if (score > best) {
+  localStorage.setItem("bestScore", score);
+}
+
+updateBestScoreDisplay();
+
+}
+
+// Mute button
+const iconOn  = document.getElementById("soundOn");
+const iconOff = document.getElementById("soundOff");
+
+function updateSoundUI(){
+  iconOn.classList.toggle("active",  soundEnabled);
+  iconOff.classList.toggle("active", !soundEnabled);
+}
+
+// 初期状態反映（初期ミュート）
+updateSoundUI();
+
+iconOn.addEventListener("click", () => {
+  soundEnabled = true;
+  if (ctx.state === "suspended") ctx.resume();
+  updateSoundUI();
+});
+
+iconOff.addEventListener("click", () => {
+  soundEnabled = false;
+  updateSoundUI();
+});
+
+// Gold icon after Meister achievement
+function updateTopIcon() {
+  const img = document.querySelector("#topIcon img");
+  if (!img) return;
+
+  const isMeister = localStorage.getItem("meisterCleared") === "true";
+  img.src = isMeister ? "gold.gif" : "black.gif";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateTopIcon();
+  updateReviewButton();
+});
+
+
+function finishPractice() {
+  quiz.classList.add("hidden");
+  entry.classList.remove("hidden");
+
+  mode = "challenge"; // reset just in case
+}
+
+// ===============================
+// Save wrong questions
+// ===============================
+function saveWrongQuestions() {
+  localStorage.setItem(
+    "wrongQuestions",
+    JSON.stringify(wrongQuestions)
+  );
+}
+
+// ===============================
+// Load wrong questions (safe version)
+// ===============================
+function loadWrongQuestions() {
+  const data = localStorage.getItem("wrongQuestions");
+
+  if (!data) {
+    wrongQuestions = [];
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(data);
+    wrongQuestions = Array.isArray(parsed) ? parsed : [];
+  } catch {
+    wrongQuestions = [];
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadWrongQuestions();
+  updateReviewButton();   // ← must be called exactly once here
+});
+
+
+
+</script>
+<!-- Service Worker 登録 -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('SW registered:', reg.scope))
+        .catch((err) => console.warn('SW registration failed:', err));
+    });
+  }
+</script>
+</body>
+</html>
