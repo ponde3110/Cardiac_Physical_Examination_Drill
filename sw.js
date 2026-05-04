@@ -1,39 +1,39 @@
 // ============================================================
 // sw.js  —  Service Worker for Cardiac Physical Exam Drill
-// Strategy: Cache-First for all local assets
+// Cache-First for static assets / Network-only for mp4・mp3
 // ============================================================
 
-const CACHE_NAME = 'cardiac-pe-drill-v1';
+const CACHE_NAME = 'cardiac-pe-drill-v2';
 
-// ── キャッシュするファイル一覧 ──
-// ※ mp4 / mp3 は大容量のためキャッシュ対象外（ネットワーク優先）
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
   '/favicon.ico',
 
-  // 画像（問題用）
-  '/q34.png',
-  '/q35.png',
-  '/q51.png',
-  '/q79.jpg',
-  '/q81.png',
-  '/q83.jpg',
-  '/q87.png',
-  '/q92.jpg',
-  '/q96.jpg',
-  '/q97.jpg',
-  '/q98.jpeg',
-
-  // GIF アイコン
+  // GIF icons
   '/black.gif',
   '/blue.gif',
   '/gold.gif',
   '/green.gif',
   '/red.gif',
 
-  // アプリアイコン
+  // Question images (exact filenames confirmed on GitHub)
+  '/q34.png',
+  '/q35.png',
+  '/q51.png',
+  '/q79.jpg',
+  '/q81.jpg',
+  '/q83.jpg',
+  '/q87.png',
+  '/q92.jpg',
+  '/q96.jpg',
+  '/q97.jpg',
+  '/q98.jpeg',
+  '/q50.jpeg',
+  '/q100.jpg',
+
+  // App icons
   '/icons/icon-72.png',
   '/icons/icon-96.png',
   '/icons/icon-128.png',
@@ -42,20 +42,32 @@ const PRECACHE_ASSETS = [
   '/icons/icon-192.png',
   '/icons/icon-384.png',
   '/icons/icon-512.png',
+
+  // Screenshots
+  '/screenshots/screen1.png',
+  '/screenshots/screen2.png',
+  '/screenshots/screen3.png',
+  '/screenshots/screen4.png',
+  '/screenshots/screen5.png',
 ];
 
-// ── インストール：静的アセットを事前キャッシュ ──
+// インストール
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(PRECACHE_ASSETS);
+      return Promise.allSettled(
+        PRECACHE_ASSETS.map((url) =>
+          cache.add(url).catch((e) =>
+            console.warn('[SW] Precache failed:', url, e)
+          )
+        )
+      );
     })
   );
-  // 旧 SW を待たずに即時有効化
   self.skipWaiting();
 });
 
-// ── アクティベート：古いキャッシュを削除 ──
+// アクティベート：古いキャッシュを削除
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -69,45 +81,36 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// ── フェッチ：リクエスト種別に応じた戦略 ──
+// フェッチ
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // 外部リクエスト（CDN 等）はキャッシュしない
-  if (url.origin !== self.location.origin) {
-    return;
-  }
+  // 外部リクエストはスルー
+  if (url.origin !== self.location.origin) return;
 
-  // mp4 / mp3 は大容量のためネットワーク優先（キャッシュしない）
   const ext = url.pathname.split('.').pop().toLowerCase();
+
+  // mp4・mp3・wav はネットワーク直接（大容量のためキャッシュしない）
   if (ext === 'mp4' || ext === 'mp3' || ext === 'wav') {
-    event.respondWith(fetch(event.request).catch(() => new Response('')));
+    event.respondWith(
+      fetch(event.request).catch(() => new Response('', { status: 503 }))
+    );
     return;
   }
 
-  // それ以外：Cache-First（キャッシュになければネットワーク取得→キャッシュ保存）
+  // それ以外：Cache-First
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
 
       return fetch(event.request).then((response) => {
-        // 正常なレスポンスのみキャッシュに保存
-        if (
-          !response ||
-          response.status !== 200 ||
-          response.type === 'opaque'
-        ) {
+        if (!response || response.status !== 200 || response.type === 'opaque') {
           return response;
         }
-
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
-        });
-
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         return response;
       }).catch(() => {
-        // オフライン時：index.html をフォールバック
         if (event.request.mode === 'navigate') {
           return caches.match('/index.html');
         }
