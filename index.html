@@ -253,8 +253,8 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 @media(max-width:480px){.rule-row{flex-direction:column;} }
 #disclaimer {
   margin-top: 24px;
-  font-size: 5px;
-  color: #aaa;
+  font-size: 12px;
+  color: #666;
   text-align: left;
   line-height: 1.6;
 }
@@ -365,7 +365,7 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 
   <!-- Disclaimer at the bottom of top page -->
   <div id="disclaimer">
-  While every effort has been made to ensure the accuracy and currency of the information contained in this app, its completeness cannot be guaranteed. The interpretation of physical findings is not always unambiguous, and the authors accept no responsibility for any loss or damage arising from the use of the information presented herein. Content may be added, modified, or removed without notice. All content in this app is protected by copyright. All physical examination findings have been shared with the informed consent of the individuals concerned.
+  <strong>Disclaimer:</strong> This app is intended for educational purposes only and does not constitute medical advice. It is not a substitute for clinical judgment or professional medical consultation. While every effort has been made to ensure the accuracy and currency of the information contained in this app, its completeness cannot be guaranteed. The interpretation of physical findings is not always unambiguous, and the authors accept no responsibility for any loss or damage arising from the use of the information presented herein. Content may be added, modified, or removed without notice. All content in this app is protected by copyright. All physical examination findings have been shared with the informed consent of the individuals concerned.
 </div>
 </div>
 
@@ -1404,12 +1404,6 @@ function check() {
     ok();
     score++;
 
-    // ✅ テスト用：3問正解でMeister
-if (mode === "challenge" && score >= 7) {
-  finish();
-  return;
-}
-
     // 🔁 Review mode: remove correctly answered question
     if (reviewMode) {
       const realIndex = order[i];
@@ -1565,7 +1559,7 @@ function finish() {
   // =====================================
   // Record Meister achievement
   // =====================================
-  if (score >= 7) {
+  if (score === 100) {
     localStorage.setItem("meisterCleared", "true");
   }
   updateTopIcon();
@@ -1587,7 +1581,7 @@ function finish() {
   // =====================================
   // Rank determination
   // =====================================
-  if (score === 7) {
+  if (score === Q.length * 1) {
 
     // Perfect score
     celebrateMeister();
@@ -1620,7 +1614,7 @@ function finish() {
 </div>
 `;
 
-  } else if (score < 2) {
+  } else if (score < 20) {
 
     celebrateBeginner();
     cls = "beginner";
@@ -1628,7 +1622,7 @@ function finish() {
     sub = "Never give up!";
     imgSrc = "green.gif";
 
-  } else if (score < 5) {
+  } else if (score < 50) {
 
     celebrateMiddle();
     cls = "middle";
