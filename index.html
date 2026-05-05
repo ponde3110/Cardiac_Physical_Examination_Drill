@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="favicon.ico">
-<title>循環器フィジカル 100本ノック - Cardiac PE Drill</title>
-<!-- developed by 川﨑 達也（松下記念病院） -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="CardiacPE Drill">
+<title>Cardiac Physical Examination Drill - 100 Questions</title>
+<!-- developed by Tatsuya Kawasaki (Matsushita Memorial Hospital) -->
 <style>
 body{margin:0;font-family:"Helvetica Neue",sans-serif;background:linear-gradient(180deg,#e3f2fd,#ffffff);}
 .hidden{display:none;}
@@ -13,20 +20,20 @@ body{margin:0;font-family:"Helvetica Neue",sans-serif;background:linear-gradient
 .card{background:#fff;border-radius:22px;padding:24px;box-shadow:0 12px 30px rgba(0,0,0,.15);margin-top:20px;}
 .entry-title{
   font-size: 27px;
-  color: #b71c1c;                   /* 文字色は赤系で強調 */
+  color: #b71c1c;                   /* text color: red emphasis */
   text-align: center;
   font-weight: bold;
-  background-color: rgba(183,28,28,0.2); /* 赤系の淡い背景 */
-  padding: 16px 24px;               /* 余白を広めに */
-  border-radius: 16px;              /* 角丸 */
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25); /* 影で立体感 */
-  text-shadow: 1px 1px 2px rgba(255,255,255,0.6); /* 文字に軽い光の影 */
+  background-color: rgba(183,28,28,0.2); /* light red background */
+  padding: 16px 24px;               /* generous padding */
+  border-radius: 16px;              /* rounded corners */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25); /* shadow for depth */
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.6); /* subtle text shadow */
 }
 .rule-row{display: flex;
-  flex-direction: column;  /* アイコンとルールを縦に並べる */
-  align-items: center;     /* アイコンを中央に配置 */
+  flex-direction: column;  /* stack icon and rules vertically */
+  align-items: center;     /* center the icon */
   justify-content: center;
-  gap: 10px;               /* アイコンとルールの間隔 */
+  gap: 10px;               /* gap between icon and rules */
   margin: 20px 0;
 }
 .rule-row img{width:80px;flex-shrink:0;}
@@ -37,7 +44,7 @@ body{margin:0;font-family:"Helvetica Neue",sans-serif;background:linear-gradient
 button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;margin-top:14px;cursor:pointer;}
 
 /* =========================
-   トップページ共通ボタン装飾
+   Top page common button styles
    ========================= */
 #startBtn,
 #practiceBtn,
@@ -55,7 +62,7 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 }
 
 /* =========================
-   検定モード（基準色）
+   Exam mode (base color)
    ========================= */
 #startBtn {
   background: linear-gradient(
@@ -66,7 +73,7 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 }
 
 /* =========================
-   練習モード（ピンク寄りベージュ）
+   Practice mode (pinkish beige)
    ========================= */
 #practiceBtn {
   background: linear-gradient(
@@ -77,7 +84,7 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 }
 
 /* =========================
-   復習モード（ピンク寄りグレー）
+   Review mode (pinkish gray)
    ========================= */
 #reviewBtn {
   background: linear-gradient(
@@ -88,7 +95,7 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 }
 
 /* =========================
-   ホバー演出（共通）
+   Hover effect (common)
    ========================= */
 #startBtn:hover,
 #practiceBtn:hover,
@@ -99,7 +106,7 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 
 
 #answerBtn {
-  background: linear-gradient(135deg, #90caf9, #64b5f6); /* グラデーション */
+  background: linear-gradient(135deg, #90caf9, #64b5f6); /* gradient */
   color: #fff;
   font-size: 18px;
   font-weight: bold;
@@ -107,17 +114,17 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
   border: none;
   border-radius: 30px; 
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* 立体感の影 */
-  transition: all 0.2s ease; /* ホバー時のアニメーション */
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* shadow for depth */
+  transition: all 0.2s ease; /* hover animation */
 }
 
 #answerBtn:hover {
-  transform: translateY(-3px); /* 上に少し浮く */
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3); /* 影を強く */
+  transform: translateY(-3px); /* float up slightly */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3); /* stronger shadow */
 }
 
 #nextBtn {
-  background: linear-gradient(135deg, #81c784, #66bb6a); /* グラデーション */
+  background: linear-gradient(135deg, #81c784, #66bb6a); /* gradient */
   color: #fff;
   font-size: 18px;
   font-weight: bold;
@@ -125,8 +132,8 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* 立体感の影 */
-  transition: all 0.2s ease; /* ホバーアニメーション */
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* shadow for depth */
+  transition: all 0.2s ease; /* hover animation */
 }
 
 #nextBtn:hover {
@@ -135,7 +142,7 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 }
 
 #resultBtn {
-  background: linear-gradient(135deg, #ce93d8, #ba68c8); /* グラデーション */
+  background: linear-gradient(135deg, #ce93d8, #ba68c8); /* gradient */
   color: #fff;
   font-size: 18px;
   font-weight: bold;
@@ -152,9 +159,9 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
-/* もう一度挑戦ボタン */
+/* Try Again button */
 #result button {
-  background: linear-gradient(135deg, #ffcc80, #ffb74d); /* グラデーション */
+  background: linear-gradient(135deg, #ffcc80, #ffb74d); /* gradient */
   color: #fff;
   font-size: 18px;
   font-weight: bold;
@@ -162,24 +169,24 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* 立体感 */
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* depth effect */
   transition: all 0.2s ease;
 }
 
 #result button:hover {
-  transform: translateY(-3px);           /* 少し浮かせる */
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3); /* 影を強化 */
+  transform: translateY(-3px);           /* float up slightly */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3); /* strengthen shadow */
 }
 
 #exp {
-  background-color: rgba(255, 235, 205, 0.4); /* 薄いベージュの背景 */
-  padding: 12px 16px;       /* 内側の余白 */
-  border-radius: 12px;       /* 角丸 */
-  margin-top: 12px;          /* 上との間隔 */
-  line-height: 1.6;          /* 読みやすさ */
+  background-color: rgba(255, 235, 205, 0.4); /* light beige background */
+  padding: 12px 16px;       /* inner padding */
+  border-radius: 12px;       /* rounded corners */
+  margin-top: 12px;          /* top margin */
+  line-height: 1.6;          /* readability */
 }
 
-/* muteボタン */
+/* mute button */
 #soundToggle {
   display: flex;
   justify-content: center;
@@ -187,16 +194,16 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
   gap: 10px;
   margin:8px 0;
   font-size: 16px;
-  color: #999;                 /* ベースは薄く */
+  color: #999;                 /* base color subtle */
 }
 
-/* ラベル */
+/* label */
 #soundToggle .label {
   color: #555;
   margin-right: 4px;
 }
 
-/* アイコン共通 */
+/* icon common styles */
 #soundToggle span {
   cursor: pointer;
   transition: color 0.15s ease,
@@ -204,16 +211,16 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
               transform 0.15s ease;
 }
 
-/* 非選択 */
+/* unselected */
 #soundToggle span:not(.active):not(.label) {
-  opacity: 0.35;               /* しっかり薄く */
+  opacity: 0.35;               /* clearly dimmed */
 }
 
-/* 選択中（ここだけを見れば判断できる） */
+/* selected (clear at a glance) */
 #soundToggle span.active {
   opacity: 1;
-  color: #111;                 /* ほぼ黒 */
-  transform: scale(1.15);      /* わずかに強調 */
+  color: #111;                 /* near black */
+  transform: scale(1.15);      /* subtle emphasis */
 }
 
 #meisterBtn{background:linear-gradient(135deg,#ffe082,#ffd54f);font-size:20px;font-weight:bold;}
@@ -240,7 +247,7 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 .medal{width:150px;margin:20px auto;animation:glow 1s infinite alternate;}
 .underline {
   text-decoration: underline;
-  text-decoration-color: red; /* 下線の色を変えたい場合 */
+  text-decoration-color: red; /* change underline color if needed */
 }
 @keyframes glow{from{box-shadow:0 0 10px gold;}to{box-shadow:0 0 40px gold;} }
 @media(max-width:480px){.rule-row{flex-direction:column;} }
@@ -252,7 +259,7 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
   line-height: 1.6;
 }
 
-/* トップページアイコン：極めて滑らかな呼吸 */
+/* Top page icon: very smooth breathing animation */
 @keyframes gentlePulse {
   0% {
     transform: scale(1);
@@ -276,11 +283,11 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
   animation: gentlePulse 7s linear infinite;
   will-change: transform, opacity;
 
-  /* GPUに確実に乗せる */
+  /* Force GPU layer */
   transform: translateZ(0);
 }
 
-/* クリック時のかわいい動き */
+/* Cute click animation */
 @keyframes iconPop {
   0%   { transform: scale(1) rotate(0deg); }
   30%  { transform: scale(1.25) rotate(8deg); }
@@ -321,59 +328,44 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 <div class="container">
 
 <div id="entry" class="card">
-<h1 class="entry-title">循環器フィジカル<br>- 100本ノック -</h1>
+<h1 class="entry-title">Cardiac Physical Exam<br>- 100-Question Drill -</h1>
 <div class="rule-row">
 <br>
-<div id="topIcon"><img src="black.gif" alt="アイコン"></div>
+<div id="topIcon"><img src="black.gif" alt="icon"></div>
 <p id="bestScoreDisplay"
    style="text-align:center; font-weight:bold; margin-top:12px;">
-  🏆 ベストスコア <span id="bestScoreValue"></span>点 🏆
+  🏆 Best Score: <span id="bestScoreValue"></span> pts 🏆
 </p>
 <ul class="rule">
-<li>100問の四択クイズ</li>
-<li>無作為順で重複なし</li>
-<li>検定は不正解で終了</li>
-<li>点数に応じて格付け</li>
-<li>完全制覇なら<span style="color: #cc0000;"><b>㊙</b></span>金言</li>
-<li>練習はランダム10問</li>
-<li>復習は不正解の問題</li>
+<li>100 four-choice questions</li>
+<li>Exam ends on first mistake</li>
+<li>Score determines your rank</li>
+<li>Practice mode: 10 random</li>
+<li>Review mode: retry missed</li>
 </ul>
 </div>
 
 <div id="soundToggle">
-  （<span class="label">効果音</span>
+  (<span class="label">Sound</span>
 
-  <span id="soundOn"  title="効果音 ON">🔊</span>
-  <span id="soundOff" title="ミュート">🔇</span>）
+  <span id="soundOn"  title="Sound ON">🔊</span>
+  <span id="soundOff" title="Mute">🔇</span>)
 </div>
 
 
-<button id="startBtn" onclick="start()">検定モード 🚀 全問</button>
-<button id="practiceBtn" onclick="startPractice()">練習モード ✏️ 10問</button>
+<button id="startBtn" onclick="start()">Exam Mode: All Questions</button>
+<button id="practiceBtn" onclick="startPractice()">Practice Mode: 10 Questions</button>
 <button id="reviewBtn" onclick="startReviewFromTop()"></button>
 
 
 <div class="credit">
 <br>
-アプリ開発/出題：川﨑 達也 (松下記念病院)<br>
-監修：<a href="https://physicalexamination.jp/" target="_blank">循環器 Physical Examination 研究会</a>
+&copy;2026 ponde3110<br>
 </div>
 
-  <!-- トップページ下部の免責 -->
+  <!-- Disclaimer at the bottom of top page -->
   <div id="disclaimer">
-  本アプリに掲載する内容については，正確性および最新性の確保に細心の注意を払っておりますが，その完全性を保証するものではありません．身体所見の解釈は必ずしも一義的ではないため，本アプリに掲載された情報に基づいて生じたいかなる損害についても，当方は一切の責任を負いかねます．なお，掲載内容は予告なく追加，変更，または削除される場合があります．本アプリに含まれるすべてのコンテンツは，著作権法により保護されています．また，掲載している身体所見に関する情報については，すべてご本人に確認のうえ，インターネット上での共有について同意を得たものを使用しています．贈る言葉は坂本二哉先生の許可を得て掲載しています．すべての問題および解説をご高閲いただきました福田信夫先生に深謝申し上げます．
-</div>
-
-<div style="margin-top:16px; text-align:center;">
-  <input 
-    type="number" 
-    id="jumpInput" 
-    placeholder="問題番号（1〜100）"
-    style="width:60%; padding:10px; font-size:16px; border-radius:10px; border:1px solid #ccc;"
-  >
-  <button onclick="jumpToQuestion()" style="margin-top:10px;">
-    問題へジャンプ
-  </button>
+  While every effort has been made to ensure the accuracy and currency of the information contained in this app, its completeness cannot be guaranteed. The interpretation of physical findings is not always unambiguous, and the authors accept no responsibility for any loss or damage arising from the use of the information presented herein. Content may be added, modified, or removed without notice. All content in this app is protected by copyright. All physical examination findings have been shared with the informed consent of the individuals concerned.
 </div>
 </div>
 
@@ -382,56 +374,56 @@ button{width:100%;padding:14px;font-size:18px;border:none;border-radius:30px;mar
 <p id="status"></p>
 <h3 id="question"></h3>
 <form id="choices"></form>
-<button id="answerBtn" onclick="check()">解答する</button>
+<button id="answerBtn" onclick="check()">Submit Answer</button>
 <h3 id="msg"></h3>
 <p id="exp"></p>
-<button id="nextBtn" class="hidden" onclick="next()">次の問題</button>
-<button id="meisterBtn" class="hidden" onclick="finish()">🏆 完全制覇 🏆</button>
-<button id="resultBtn" class="hidden" onclick="finish()">結果を見る</button>
+<button id="nextBtn" class="hidden" onclick="next()">Next Question</button>
+<button id="meisterBtn" class="hidden" onclick="finish()">🏆 Perfect Score! 🏆</button>
+<button id="resultBtn" class="hidden" onclick="finish()">See Results</button>
 </div>
 
 <div id="result" class="card hidden">
 <div id="resultBox" class="result-box"></div>
-<button onclick="reset()">もう一度挑戦</button>
+<button onclick="reset()">Try Again</button>
 </div>
 </div>
 
 <script>
 
-// ベストスコアとマイスター到達のリセット
+// Reset best score and Meister status
 /* ---
 localStorage.removeItem("bestScore");
 localStorage.setItem("meisterCleared", "false");
 --- */
 
-// ===== 復習ここから =====
-let wrongQuestions = [];   // 間違えた問題番号
-let reviewMode = false;   // 復習モード中かどうか
+// ===== REVIEW MODE START =====
+let wrongQuestions = [];   // incorrectly answered question indices
+let reviewMode = false;   // whether review mode is active
 
 function startReviewFromTop() {
 
-  // 復習すべき問題がなければ何もしない
+  // Do nothing if there are no questions to review
   if (wrongQuestions.length === 0) {
     return;
   }
 
-  // 復習モード開始
+  // Start review mode
   reviewMode = true;
   mode = "review";
 
-  // 間違えた問題だけ出題
+  // Show only incorrect questions
   order = [...wrongQuestions];
 
-  // 初期化
+  // Initialize
   i = 0;
   score = 0;
 
-  // 画面切り替え
+  // Switch screens
   entry.classList.add("hidden");
   result.classList.add("hidden");
   quiz.classList.remove("hidden");
 
-  // 最初の問題表示
+  // Show first question
   show();
 }
 
@@ -439,7 +431,7 @@ function startReviewFromTop() {
 function finishReview() {
 
   reviewMode = false;
-  mode = "challenge"; // 元に戻す
+  mode = "challenge"; // reset
 
   quiz.classList.add("hidden");
   entry.classList.remove("hidden");
@@ -449,10 +441,10 @@ function updateReviewButton() {
   const btn = document.getElementById("reviewBtn");
   if (!btn) return;
 
-  btn.textContent = `復習モード 🔗 ${wrongQuestions.length}問`;
+  btn.textContent = `Review Mode: ${wrongQuestions.length} Questions`;
 }
 
-// ===== 復習ここまで =====
+// ===== REVIEW MODE END =====
 
 function updateBestScoreDisplay() {
   // 未保存なら 0 点として扱う
@@ -473,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ===== SOUND =====
 let soundEnabled =
-  localStorage.getItem("soundEnabled") === "true"; // ← 必ず最初（初期ミュート，onならtrue）
+  localStorage.getItem("soundEnabled") === "true"; // initial mute; true = on
 
   document.addEventListener("DOMContentLoaded", () => {
   const iconOn  = document.getElementById("soundOn");
@@ -484,10 +476,10 @@ let soundEnabled =
     iconOff.classList.toggle("active", !soundEnabled);
   }
 
-  /* 初期状態をUIに反映 */
+  /* Reflect initial state in UI */
   updateSoundUI();
 
-  /* --- ここが追加ポイント②：保存 --- */
+  /* Save sound setting */
   iconOn.addEventListener("click", () => {
     soundEnabled = true;
     localStorage.setItem("soundEnabled", "true");
@@ -531,615 +523,615 @@ const ng = () => {
 };
 
 
-/* ===== 問題 ===== */
+/* ===== QUESTIONS ===== */
 const Q = [
   [
-    "問題1：聴診器で正しいのはどれか．",
-    ["イヤーピースやゴム管，チェストピースから成る", "チェストピースには膜とベルがある", "膜とベルは必要に応じて使い分ける", "上記のすべて"],
-    3, // 正解のインデックス（0〜3）
-    "聴診器のチェストピースは大きい方が膜，小さい方がベルと呼ばれている．"
-  ],
-  [
-    "問題2：聴診器で正しいのはどれか．",
-    ["膜で高調音を聴取", "ベルで低調音を聴取", "膜は胸壁に押し付け，ベルは軽く当てる", "上記のすべて"],
+    "Q1: Which of the following is correct regarding the stethoscope?",
+    ["Consists of earpieces, tubing, and a chestpiece", "The chestpiece has a diaphragm and a bell", "The diaphragm and bell are used selectively as needed", "All of the above"],
     3,
-    "ベルを胸壁に強く押し当てると，膜と同様に低調音が聴こえなくなる．"
+    "The chestpiece of a stethoscope has two sides: the larger side is the diaphragm and the smaller side is the bell."
   ],
   [
-    "問題3：Ⅰ音（S1）で正しいのはどれか．",
-    ["房室弁の閉鎖のタイミング", "Ⅰ音（S1）とⅡ音（S2）の間が収縮期", "音量は体位やPR間隔，胸壁の厚みなどに影響を受ける", "上記のすべて"],
+    "Q2: Which of the following is correct regarding the stethoscope?",
+    ["The diaphragm is used for high-pitched sounds", "The bell is used for low-pitched sounds", "The diaphragm is pressed firmly; the bell is applied lightly", "All of the above"],
     3,
-    "Ⅰ音（S1）の主成分は，房室弁である僧帽弁と三尖弁の閉鎖に関連する音と考えられている．"
+    "If the bell is pressed too firmly against the chest wall, low-pitched sounds become inaudible, similar to using the diaphragm."
   ],
   [
-    "問題4：健常者のⅠ音（S1）で正しいのはどれか．",
-    ["Ⅱ音（S2）よりも低調", "Ⅱ音（S2）よりも長い", "心基部よりも心尖部で明瞭", "上記のすべて"],
+    "Q3: Which of the following is correct regarding S1?",
+    ["Corresponds to closure of the atrioventricular valves", "Systole falls between S1 and S2", "Its intensity is influenced by body position, PR interval, and chest wall thickness", "All of the above"],
     3,
-    "Ⅰ音（S1）はⅡ音（S2）と比較して，低調で長く心尖部優位である．"
+    "S1 is primarily generated by closure of the atrioventricular valves — the mitral and tricuspid valves."
   ],
   [
-    "問題5：Ⅱ音（S2）で正しいのはどれか．",
-    ["半月弁の閉鎖のタイミング", "Ⅱ音（S2）とⅠ音（S1）の間が拡張期", "音量は体位や体格などに影響を受ける", "上記のすべて"],
+    "Q4: Which of the following is correct regarding S1 in healthy individuals?",
+    ["Lower pitched than S2", "Longer duration than S2", "Heard more clearly at the apex than the base", "All of the above"],
     3,
-    "Ⅱ音（S2）の主成分は，半月弁である大動脈弁と肺動脈弁の閉鎖に関連する音と考えられている．"
+    "Compared with S2, S1 is lower pitched, longer, and more prominent at the cardiac apex."
   ],
   [
-    "問題6：健常者のⅡ音（S2）で<span class='underline'>誤り</span>はどれか．",
-    ["Ⅰ音（S1）よりも低調", "Ⅰ音（S1）より短い", "心尖部よりも心基部で明瞭", "分裂することがある"],
+    "Q5: Which of the following is correct regarding S2?",
+    ["Corresponds to closure of the semilunar valves", "Diastole falls between S2 and S1", "Its intensity is influenced by body position and body habitus", "All of the above"],
+    3,
+    "S2 is primarily generated by closure of the semilunar valves — the aortic and pulmonic valves."
+  ],
+  [
+    "Q6: Which of the following is <span class='underline'>incorrect</span> regarding S2 in healthy individuals?",
+    ["Lower pitched than S1", "Shorter duration than S1", "Heard more clearly at the base than the apex", "Can be split"],
     0,
-    "Ⅱ音（S2）はⅠ音（S1）と比較して，高調で短く心基部優位である．"
+    "Compared with S1, S2 is higher pitched, shorter in duration, and more prominent at the cardiac base."
   ],
   [
-    "問題7：健常者のⅡ音（S2）で<span class='underline'>誤り</span>はどれか．",
-    ["吸気時に分裂することがある", "分裂は心尖部で確認する", "分裂は大動脈成分，肺動脈成分の順", "大動脈成分は，肺動脈成分よりも大きい"],
+    "Q7: Which of the following is <span class='underline'>incorrect</span> regarding S2 splitting in healthy individuals?",
+    ["Splitting may occur during inspiration", "Splitting is assessed at the cardiac apex", "Splitting consists of the aortic component followed by the pulmonic component", "The aortic component is louder than the pulmonic component"],
     1,
-    "Ⅱ音（S2）の評価はエルブ領域（第3肋間胸骨左縁）の周辺で確認する．"
+    "S2 splitting is best assessed near Erb's point (left sternal border at the 3rd intercostal space)."
   ],
 [
-  "問題8：非代償性心不全例の心音（3L）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q8.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-  ["Ⅱ音（S2）が分裂している", "Ⅱ音（S2）の大動脈成分よりも肺動脈成分の方が大きい", "肺高血圧症が疑われる", "上記のすべて"],
+  "Q8: Heart sounds in decompensated heart failure (3L)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q8.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+  ["S2 is split", "The pulmonic component of S2 is louder than the aortic component", "Pulmonary hypertension is suspected", "All of the above"],
   3,
-  "Ⅱ音（S2）が分裂し，その音量が前半（大動脈成分）よりも後半（肺動脈成分）で大きいときは肺高血圧を疑う．"
+  "When S2 is split and the second component (pulmonic) is louder than the first (aortic), pulmonary hypertension should be suspected."
 ],
   [
-    "問題9：頸静脈の解剖で<span class='underline'>誤り</span>はどれか．",
-    ["外頸静脈は表在静脈で拍動が視認しやすい", "内頸静脈は深部静脈で皮膚面の拍動を介して判定", "外頸静脈には有効に働く逆流防止弁あり", "左側の頸静脈は右房と直線的な位置関係"],
+    "Q9: Which of the following is <span class='underline'>incorrect</span> regarding jugular vein anatomy?",
+    ["The external jugular vein is a superficial vein with easily visible pulsations", "The internal jugular vein is deep; pulsations are assessed indirectly through the skin", "The external jugular vein has effective competent valves", "The left jugular vein has a straight anatomical relationship with the right atrium"],
     3,
-    "右房と直線的な関係にあるのは右側の頸静脈である．外頸静脈は視認性に優れるが，逆流防止弁などで圧が修飾を受ける．よって右房圧の推定には右内頸静脈を用いる．"
+    "It is the right jugular vein, not the left, that has a direct anatomical relationship with the right atrium. The external jugular vein is more visible but its pressure can be modified by valves, so the right internal jugular vein is used to estimate right atrial pressure."
   ],
   [
-    "問題10：頸静脈評価で<span class='underline'>誤り</span>はどれか．",
-    ["45度の半座位で判定する必要がある", "座位で右内頸静脈の拍動を明瞭に認めれば心不全を疑う", "仰臥位で右内頸静脈の拍動を視認しないときは脱水を疑う", "肥満例など一部の症例では右内頸静脈の評価は困難"],
+    "Q10: Which of the following is <span class='underline'>incorrect</span> regarding jugular venous assessment?",
+    ["Assessment must be performed at 45° semi-recumbent position", "If right internal jugular pulsations are clearly visible in the seated position, heart failure is suspected", "If right internal jugular pulsations are not visible in the supine position, dehydration is suspected", "Assessment of the right internal jugular vein may be difficult in obese patients"],
     0,
-    "従来の半座位定量法（右内頸静脈の拍動上縁と胸骨角の垂直距離を測定）は臨床現場では困難．心不全を疑う症例では，座位による定性法（視認するか否か）が有用である．"
-  ],
-    [
-    "問題11：安静時の息切れで来院（座位）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q11.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["頸部に周期的な拍動を認めない", "右房圧は上昇していない", "健常者でも同様の所見を認める", "非代償性心不全が疑われる"],
-    3,
-    "座位で右側の内頸静脈に拍動を認めれば，右房圧の高度上昇が示唆される（心不全と判断可能）．"
+    "The traditional semi-recumbent quantitative method (measuring the vertical distance between the upper border of right internal jugular pulsation and the sternal angle) is difficult in clinical practice. A qualitative seated approach (visible or not) is more practical in suspected heart failure."
   ],
   [
-    "問題12：労作時の息切れで来院（座位）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q12.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br><span class='underline'>誤り</span>はどれか．",
-    ["安静時に頸部の周期的な拍動はない", "吸気後に内頸静脈の拍動が出現", "右房圧の上昇が疑われる", "健常者でもしばしば同様の所見を認める"],
+    "Q11: Patient presenting with dyspnea at rest (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q11.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["No periodic pulsation is visible in the neck", "Right atrial pressure is not elevated", "Similar findings can be seen in healthy individuals", "Decompensated heart failure is suspected"],
     3,
-    "吸気で新たに出現する内頸静脈の拍動は心不全を示唆する．2025年に改定された心不全ガイドラインにも記載されている．"
+    "Visible pulsation of the right internal jugular vein in the seated position indicates markedly elevated right atrial pressure — consistent with a diagnosis of heart failure."
   ],
   [
-    "問題13：Ⅲ音（S3）で正しいのはどれか．",
-    ["Ⅱ音（S2）直後に出現する過剰音", "Ⅰ音（S1）直前に出現する過剰音", "聴診器の膜を用いて確認", "第三肋間胸骨左縁（エルブ領域）で確認"],
+    "Q12: Patient presenting with exertional dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q12.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["No periodic neck pulsation at rest", "Internal jugular pulsation appears on inspiration", "Elevated right atrial pressure is suspected", "Similar findings are often seen in healthy individuals"],
+    3,
+    "Internal jugular pulsation that newly appears on inspiration suggests heart failure."
+  ],
+  [
+    "Q13: Which of the following is correct regarding S3?",
+    ["An extra sound occurring immediately after S2", "An extra sound occurring immediately before S1", "Assessed using the diaphragm of the stethoscope", "Assessed at the left sternal border (Erb's point)"],
     0,
-    "Ⅲ音（S3）は拡張早期に出現する低調音で，聴診器のベルを心尖部に軽く当て確認する．"
+    "S3 is a low-pitched extra sound occurring in early diastole, best heard by lightly applying the bell of the stethoscope at the apex."
   ],
   [
-    "問題14：Ⅲ音（S3）で<span class='underline'>誤り</span>はどれか．",
-    ["若者なら健常者でも聴取することが少なくない", "立位や仰臥位よりも左半側臥位で聴取しやすい", "心房収縮時の血液流入に伴う心室壁の衝撃音", "心不全や僧帽弁逆流で出現しやすい"],
+    "Q14: Which of the following is <span class='underline'>incorrect</span> regarding S3?",
+    ["Not uncommon in healthy young individuals", "Easier to hear in the left lateral decubitus position than upright or supine", "A ventricular wall impact sound related to atrial contraction and blood inflow", "More likely to be present in heart failure or mitral regurgitation"],
     2,
-    "Ⅲ音（S3）の主な機序は，急速流入期の血液流入（心エコーのE波）に伴う心室壁の衝撃音と考えられている．"
+    "S3 is thought to arise from the impact of the ventricular wall during rapid ventricular filling (corresponding to the E wave on echocardiography), not from atrial contraction."
   ],
   [
-    "問題15：Ⅳ音（S4）で正しいのはどれか．",
-    ["Ⅱ音（S2）直後に出現する過剰音", "Ⅰ音（S1）直前に出現する過剰音", "心尖部よりも心基部で確認", "聴診器の膜を用いて確認"],
+    "Q15: Which of the following is correct regarding S4?",
+    ["An extra sound occurring immediately after S2", "An extra sound occurring immediately before S1", "Best heard at the cardiac base rather than the apex", "Assessed using the diaphragm of the stethoscope"],
     1,
-    "Ⅳ音（S4）は前収縮期に出現する低調音で，聴診器のベルを心尖部に軽く当て確認する．"
+    "S4 is a low-pitched extra sound occurring in the pre-systolic period, best heard by lightly applying the bell at the apex."
   ],
   [
-    "問題16：Ⅳ音（S4）で<span class='underline'>誤り</span>はどれか．",
-    ["聴診したら異常である", "心房細動例でもしばしば認める", "心房収縮に関連する音である", "肥大型心筋症や虚血性心疾患で出現しやすい"],
+    "Q16: Which of the following is <span class='underline'>incorrect</span> regarding S4?",
+    ["Its presence is always abnormal", "It can sometimes be heard in patients with atrial fibrillation", "It is related to atrial contraction", "More likely in hypertrophic cardiomyopathy or ischemic heart disease"],
     1,
-    "Ⅳ音（S4）は心房収縮時の血液流入（心エコーのA波）に伴う心室壁の振動と考えられている．よって心房細動の症例で聴取することはない．"
+    "S4 is related to atrial contraction and ventricular wall vibration from blood inflow (corresponding to the A wave on echocardiography). Therefore, S4 cannot be heard in patients with atrial fibrillation."
   ],
   [
-    "問題17：労作時の息切れで来院<br><video controls style='width:100%; max-width: 600px; height:auto;'><source src='q17.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しい過剰音はどれか．",
-    ["Ⅲ音（S3）", "Ⅳ音（S4）", "Ⅲ音（S3）やⅣ音（S4）ではない", "Ⅲ音（S3）とⅣ音（S4）を区別できない"],
+    "Q17: Patient presenting with exertional dyspnea<br><video controls style='width:100%; max-width: 600px; height:auto;'><source src='q17.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which extra sound is present?",
+    ["S3", "S4", "Neither S3 nor S4", "S3 and S4 cannot be distinguished"],
     0,
-    "Ⅲ音（S3）はⅡ音（S2）直後の過剰音で，ベルを心尖部に軽く当てたときにのみ認める（＝低調音）．本例は後に拡張型心筋症と診断された．左室収縮力が低下した症例では，左室圧の上昇が緩徐になりⅠ音（S1）は減弱しやすい．"
+    "S3 is an extra sound immediately after S2, audible only when the bell is lightly applied at the apex (i.e., low-pitched). This patient was later diagnosed with dilated cardiomyopathy. In patients with reduced left ventricular contractility, S1 tends to be diminished due to slower rise in LV pressure."
   ],
   [
-    "問題18：心電図異常を指摘され来院<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q18.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しい過剰音はどれか．",
-    ["Ⅲ音（S3）", "Ⅳ音（S4）", "Ⅲ音（S3）やⅣ音（S4）ではない", "Ⅲ音（S3）とⅣ音（S4）を区別できない"],
+    "Q18: Patient referred for ECG abnormality<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q18.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which extra sound is present?",
+    ["S3", "S4", "Neither S3 nor S4", "S3 and S4 cannot be distinguished"],
     1,
-    "Ⅳ音（S4）はⅠ音（S1）直前の過剰音で，ベルを心尖部に軽く当てたときにのみ認める（＝低調音）．本例は後に肥大型心筋症と診断された．"
+    "S4 is an extra sound immediately before S1, audible only when the bell is lightly applied at the apex (i.e., low-pitched). This patient was later diagnosed with hypertrophic cardiomyopathy."
   ],
   [
-    "問題19：ギャロップで<span class='underline'>誤り</span>はどれか．",
-    ["馬の駆ける音に似る", "邦名は奔馬調（ほんばちょう）である", "非代償性の心不全を示唆", "Ⅲ音（S3）やⅣ音（S4）を伴うので聴診器の膜で聴診"],
+    "Q19: Which of the following is <span class='underline'>incorrect</span> regarding gallop rhythm?",
+    ["Resembles the sound of a galloping horse", "Also called 'bruit de galop' in French", "Suggests decompensated heart failure", "Requires auscultation with the diaphragm since it includes S3 or S4"],
     3,
-    "Ⅲ音（S3）やⅣ音（S4）は低調音なので，聴診器のベルで聴取する．"
+    "S3 and S4 are low-pitched sounds and should be auscultated with the bell of the stethoscope."
   ],
   [
-    "問題20：ギャロップで<span class='underline'>誤り</span>はどれか．",
-    ["過剰音がⅢ音（S3）なら心室性ギャロップ", "過剰音がⅣ音（S4）なら心房性ギャロップ", "Ⅲ音（S3）とⅣ音（S4）が共存すれば二部調律", "Ⅲ音（S3）とⅣ音が重なると重合奔馬調"],
+    "Q20: Which of the following is <span class='underline'>incorrect</span> regarding gallop rhythm?",
+    ["A ventricular gallop has S3 as the extra sound", "An atrial gallop has S4 as the extra sound", "Co-existing S3 and S4 produces a two-beat rhythm", "Overlapping S3 and S4 produces a summation gallop"],
     2,
-    "Ⅲ音（S3）とⅣ音（S4）が共存すれば四部調律と呼ばれる（Ⅰ音 [S1] とⅡ音 [S2] を含め計4つの心音が聴こえるため）．"
+    "Co-existing S3 and S4 produces a quadruple rhythm (four heart sounds in total: S1, S2, S3, and S4)."
   ],
   [
-    "問題21：呼吸困難感を訴える症例（来院時と治療2週間後の心音）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q21.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>来院時で正しいのはどれか．",
-    ["ギャロップを聴取", "聴診で過剰音がⅢ音（S3）かⅣ音（S4）かの鑑別は困難", "非代償性心不全が疑われる", "上記のすべて"],
+    "Q21: Patient with dyspnea — heart sounds at presentation and 2 weeks after treatment<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q21.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct regarding the presentation?",
+    ["A gallop is audible", "It is difficult to distinguish S3 from S4 by auscultation", "Decompensated heart failure is suspected", "All of the above"],
     3,
-    "馬が駆け抜けるようなギャロップの特徴的な音感を耳に焼き付けておきたい．"
+    "The characteristic sound of a gallop — like a horse at full gallop — should be committed to auditory memory."
   ],
   [
-    "問題22：呼吸困難感を訴える症例（来院時と治療2週間後の心音）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q21.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>2週間後で正しいのはどれか．",
-    ["2週間後もギャロップは持続", "2週間後は心拍数が少し低下", "来院時と2週間後ではギャロップの種類が異なる", "上記のすべて"],
+    "Q22: Patient with dyspnea — heart sounds at presentation and 2 weeks after treatment<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q21.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct regarding 2 weeks later?",
+    ["Gallop persists at 2 weeks", "Heart rate is slightly lower at 2 weeks", "The type of gallop differs between presentation and 2 weeks", "All of the above"],
     3,
-    "来院時はⅢ音（S3）とⅣ音（S4）が重なった重合奔馬調であるが，2週間後は少し心拍数が低下して四部調律（Ⅲ音 [S3] とⅣ音 [S4] が分離）になっている．"
+    "At presentation, S3 and S4 overlap to create a summation gallop. At 2 weeks, the slightly slower heart rate separates them into a quadruple rhythm (distinct S3 and S4)."
   ],
   [
-    "問題23：心不全の身体所見のうち，うっ血に特異的なものはどれか．",
-    ["Ⅲ音（S3）", "ギャロップリズム", "座位で右内頸静脈の拍動を視認", "上記のすべて"],
+    "Q23: Which physical finding is specific for congestion in heart failure?",
+    ["S3", "Gallop rhythm", "Visible right internal jugular pulsation in the seated position", "All of the above"],
     3,
-    "他の特異的な身体所見として，心尖拍動の左側偏位とチェーン・ストークス呼吸（交代性無呼吸）がガイドラインに記載されている．"
+    "Other specific findings include leftward displacement of the apical impulse and Cheyne-Stokes respiration."
   ],
   [
-    "問題24：心不全の身体所見のうち，うっ血に<span class='underline'>非</span>特異的なものはどれか．",
-    ["頻呼吸，肺ラ音", "末梢浮腫 （下腿，臀部，陰嚢）", "体重増加（＞2kg/週）", "上記のすべて"],
+    "Q24: Which of the following physical findings in heart failure is <span class='underline'>non</span>-specific for congestion?",
+    ["Tachypnea, pulmonary rales", "Peripheral edema (lower extremities, buttocks, scrotum)", "Weight gain (>2 kg/week)", "All of the above"],
     3,
-    "他の非特異的な所見として，下肺野の呼吸音減弱/打診濁音（胸水）と肝腫大/腹水がガイドラインに記載されている．"
+    "Other non-specific findings include diminished breath sounds/dullness to percussion at the lung bases (pleural effusion) and hepatomegaly/ascites."
   ],
   [
-    "問題25：心不全の症状のうち，肺うっ血/左房圧上昇に典型的なものはどれか．",
-    ["息切れ", "起座呼吸，発作性夜間呼吸困難", "前屈呼吸苦 （ベンド[プ]ニア）", "上記のすべて"],
+    "Q25: Which symptom is typical of pulmonary congestion/elevated left atrial pressure in heart failure?",
+    ["Dyspnea on exertion", "Orthopnea, paroxysmal nocturnal dyspnea", "Bendopnea (dyspnea when bending forward)", "All of the above"],
     3,
-    "非典型的な症状には，夜間咳嗽と気道狭窄音がガイドラインに記載されている．"
+    "Atypical symptoms include nocturnal cough and wheezing."
   ],
   [
-    "問題26：心不全の症状で体うっ血/右房圧上昇に典型的なものはどれか．",
-    ["腹部膨満感", "食後満腹感", "前屈呼吸苦 （ベンド[プ]ニア）", "食欲低下"],
+    "Q26: Which symptom is typical of systemic congestion/elevated right atrial pressure in heart failure?",
+    ["Abdominal bloating", "Early satiety", "Bendopnea (dyspnea when bending forward)", "Reduced appetite"],
     2,
-    "他に典型的な所見として下腿浮腫がガイドラインに記載されている．前屈呼吸苦 （ベンド[プ]ニア）は，肺うっ血/左房圧上昇と体うっ血/右房圧上昇のいずれにも典型的な所見として記載されている．"
+    "Lower extremity edema is another typical finding. Bendopnea is listed as typical for both pulmonary congestion/elevated LAP and systemic congestion/elevated RAP."
   ],
   [
-    "問題27：健常者の心尖拍動（仰臥位）で正しいものはどれか．",
-    ["女性の最外側点は胸骨中央より10 ㎝以内", "男性の最外側点は左乳輪の内側", "性状は持続時間の短いタッピング", "上記のすべて"],
+    "Q27: Which of the following is correct regarding the apical impulse in healthy individuals (supine)?",
+    ["The lateral-most point in women is within 10 cm from the midsternum", "The lateral-most point in men is medial to the left nipple", "The character is a brief, tapping quality", "All of the above"],
     3,
-    "心尖拍動はさまざまな情報を提供するが，仰臥位で触知できる症例は約30％に留まると報告されている．"
+    "The apical impulse provides a wealth of information, but is reportedly palpable in only about 30% of subjects in the supine position."
   ],
   [
-    "問題28：心筋梗塞の既往がある症例（仰臥位・右頭側）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q28.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいものはどれか．",
-    ["心尖拍動を認めない", "心尖拍動を左乳輪の内側に認める", "外側偏位した心尖拍動は心拡大を示唆", "外側偏位した心尖拍動は心肥大を示唆"],
+    "Q28: Patient with prior myocardial infarction (supine, right side of head)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q28.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["No apical impulse is visible", "The apical impulse is medial to the left nipple", "A laterally displaced apical impulse suggests cardiomegaly", "A laterally displaced apical impulse suggests ventricular hypertrophy"],
     2,
-    "仰臥位で心尖拍動が外側偏位しているときは心拡大が示唆される．"
+    "Lateral displacement of the apical impulse in the supine position suggests cardiomegaly."
   ],
   [
-    "問題29：仰臥位で心尖拍動を評価する方法として正しいものはどれか．",
-    ["視診だけで確認", "視診と触診を併用", "左側からのみ確認", "触診だけで確認"],
+    "Q29: Which of the following is the correct method for assessing the apical impulse in the supine position?",
+    ["Inspection only", "Inspection combined with palpation", "Assessment from the left side only", "Palpation only"],
     1,
-    "心尖拍動は，視診と触診を併用し多方向から確認する．"
+    "The apical impulse should be assessed by combining inspection and palpation from multiple directions."
   ],
   [
-    "問題30：心不全症例（仰臥位で左乳房を接線方向から観察）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q30.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいものはどれか．",
-    ["心尖拍動を認めない", "拍動パターンは正常", "この方向からは心尖拍動は評価できない", "拍動パターンは心肥大を示唆"],
+    "Q30: Patient with heart failure (supine, left breast viewed tangentially)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q30.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["No apical impulse is visible", "The impulse pattern is normal", "The apical impulse cannot be assessed from this angle", "The impulse pattern suggests ventricular hypertrophy"],
     3,
-    "接線方向から見ると，本例の心尖拍動は隆起時間が長い．このような拍動は抬起性と呼ばれ，心肥大の存在を示唆する．正常パターンの心尖拍動は，触れないか持続時間の短いタッピングである．"
+    "Viewed tangentially, this patient has a prolonged upstroke of the apical impulse — called a 'heaving' or 'sustained' impulse — which suggests ventricular hypertrophy. A normal apical impulse is either impalpable or has a brief, tapping quality."
   ],
   [
-    "問題31：心不全と関連した呼吸様式はどれか．",
-    ["チェーン・ストークス呼吸（交代性無呼吸）", "ビオー呼吸（失調性呼吸）", "クスマウル呼吸", "上記のすべて"],
+    "Q31: Which breathing pattern is associated with heart failure?",
+    ["Cheyne-Stokes respiration", "Biot's respiration (ataxic breathing)", "Kussmaul breathing", "All of the above"],
     0,
-    "チェーン・ストークス呼吸は漸増漸減が特徴的な中枢型呼吸障害で，ガイドラインにも記載されている．ただし中枢神経疾患や薬物中毒などでも出現する．クスマウル呼吸は規則正しい深い呼吸の連続で，ビオー呼吸は一過性かつ不規則な無換気．"
+    "Cheyne-Stokes respiration is a central respiratory disorder characterized by waxing and waning tidal volumes. However, it can also occur with CNS disease or drug toxicity. Kussmaul breathing is regular and deep, while Biot's is irregular with transient apnea."
   ],
   [
-    "問題32：心不全のチェーン・ストークス呼吸で<span class='underline'>誤り</span>はどれか．",
-    ["感度が高い", "特異度が高い", "1回換気量が漸増・漸減し，その後に一時停止", "1周期は約30秒～2分（無呼吸は10～20秒程度）"],
+    "Q32: Which of the following is <span class='underline'>incorrect</span> regarding Cheyne-Stokes respiration in heart failure?",
+    ["High sensitivity", "High specificity", "Tidal volume waxes and wanes, followed by a pause", "One cycle lasts approximately 30 seconds to 2 minutes (apnea ~10-20 seconds)"],
     0,
-    "チェーン・ストークス呼吸は，心不全に対する特異度は高いが感度は低い．低心拍出に伴う循環時間の延長により化学受容体へのフィードバック遅延が主因と考えられている．"
+    "Cheyne-Stokes respiration has high specificity but low sensitivity for heart failure. The primary mechanism is thought to be delayed feedback to chemoreceptors due to prolonged circulation time from low cardiac output."
   ],
   [
-    "問題33：感染性心内膜炎が疑われるときに確認すべき部位はどこか．",
-    ["結膜", "口腔内", "四肢末梢（爪床を含む）", "上記のすべて"],
+    "Q33: Which sites should be examined when infective endocarditis is suspected?",
+    ["Conjunctiva", "Oral cavity", "Distal extremities (including nail beds)", "All of the above"],
     3,
-    "発熱が持続する症例で感染性心内膜炎を疑えば，心エコーを行う前に塞栓症や免疫反応による末梢サインの有無を確認しておきたい．"
+    "In a patient with persistent fever and suspected infective endocarditis, peripheral signs of emboli or immune reactions should be checked before echocardiography."
   ],
   [
-    "問題34：発熱持続例の左眼瞼結膜<br><img src='q34.png' style='width:100%; max-width:600px; height:auto;' alt='左眼瞼結膜'><br><span class='underline'>誤り</span>はどれか．",
-    ["点状出血あり", "通常は無痛性", "敗血症性塞栓を反映した末梢サインの一つ", "感染性心内膜炎に対する感度が高い"],
+    "Q34: Left palpebral conjunctiva in a patient with persistent fever<br><img src='q34.png' style='width:100%; max-width:600px; height:auto;' alt='Left palpebral conjunctiva'><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["Petechiae are present", "Usually painless", "A peripheral sign reflecting septic emboli", "High sensitivity for infective endocarditis"],
     3,
-    "感染性心内膜炎の結膜出血は感度は低いが（30％程度），特異性に優れる．Duke-ISCVID診断基準にも小基準として明記されている．"
+    "Conjunctival hemorrhage has low sensitivity (~30%) for infective endocarditis but high specificity. It is listed as a minor criterion in the Duke-ISCVID diagnostic criteria."
   ],
   [
-    "問題35：発熱が続くため来院（圧痛あり）<br><img src='q35.png' style='width:100%; max-width:600px; height:auto;' alt='左手掌'><br>正しいものはどれか．",
-    ["オスラー結節が疑われる", "免疫学的現象による微小血管炎症を反映", "感染性心内膜炎で出現することがある", "上記のすべて"],
+    "Q35: Patient with persistent fever presenting with a tender lesion<br><img src='q35.png' style='width:100%; max-width:600px; height:auto;' alt='Left palm'><br>Which of the following is correct?",
+    ["Osler's node is suspected", "Reflects immune-mediated microvasculitis", "Can occur in infective endocarditis", "All of the above"],
     3,
-    "オスラー結節と呼ばれる有痛性の隆起紅斑で，感染性心内膜炎のDuke-ISCVID基準にも臨床診断の小基準として明記されている．"
+    "This is a painful raised erythematous lesion called an Osler's node, listed as a minor clinical criterion in the Duke-ISCVID criteria for infective endocarditis."
   ],
   [
-    "問題36：オスラー結節で正しいものはどれか．",
-    ["出現頻度は低いが，疾患特異性が高い", "四肢末端に出現することが多い", "手足の疼痛部位を確認することが大切", "上記のすべて"],
+    "Q36: Which of the following is correct regarding Osler's nodes?",
+    ["Infrequent but highly disease-specific", "Predominantly found at the distal extremities", "It is important to check for tender areas of the hands and feet", "All of the above"],
     3,
-    "小さな病変を見逃さないため，診察時には有痛性という特徴を最大限に活用したい（患者本人が自覚していることが少なくない）．"
+    "To avoid missing small lesions, the painful character of Osler's nodes should be fully utilized — patients themselves are often aware of them."
   ],
   [
-    "問題37：心雑音の1例<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q37.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>上記の心雑音で<span class='underline'>誤り</span>はどれか．",
-    ["収縮期の心雑音である", "音量は漸増・漸減する", "Ⅰ音（S1）とⅡ音（S2）は雑音に埋没", "典型例は大動脈弁狭窄症"],
+    "Q37: A cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q37.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span> regarding this murmur?",
+    ["It is a systolic murmur", "The intensity crescendos then decrescendos", "S1 and S2 are buried within the murmur", "A typical cause is aortic stenosis"],
     2,
-    "収縮期駆出性雑音ではⅠ音（S1）とⅡ音（S2）は聴取できることが多い．一方，収縮期逆流性雑音では通常，Ⅰ音（S1）とⅡ音（S2）は心雑音に埋没する．"
+    "In a systolic ejection murmur, S1 and S2 are usually still audible. In contrast, in a systolic regurgitant murmur, S1 and S2 are typically buried within the murmur."
   ],
   [
-    "問題38：大動脈弁狭窄症を示唆する心雑音で正しいものはどれか．",
-    ["収縮期の駆出性雑音", "前胸部の広い範囲で雑音聴取", "鎖骨や頸部に雑音が放散", "上記のすべて"],
+    "Q38: Which of the following is correct regarding a murmur suggesting aortic stenosis?",
+    ["A systolic ejection murmur", "Audible over a wide area of the precordium", "Radiation to the clavicles and neck", "All of the above"],
     3,
-    "心雑音が頸部や鎖骨へ明瞭に放散するという大動脈弁狭窄症の特徴は，他疾患との鑑別に役立つ．特に鎖骨に聴診器の膜を当てる鎖骨聴診は，とても簡便（頸部と異なり呼吸音の混入が少ないため息止め不要）．"
+    "The radiation of the murmur clearly to the neck and clavicles is a hallmark of aortic stenosis that helps distinguish it from other conditions. Clavicular auscultation is particularly convenient (less respiratory noise than the neck — breath-holding not required)."
   ],
   [
-    "問題39：心雑音の1例<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q39.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br><span class='underline'>誤り</span>はどれか．",
-    ["収縮期の心雑音", "雑音の音量は漸増・漸減", "Ⅰ音（S1）とⅡ音（S2）は雑音に埋没", "典型例は僧帽弁逆流症"],
+    "Q39: A cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q39.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["It is a systolic murmur", "The murmur intensity crescendos then decrescendos", "S1 and S2 are buried within the murmur", "A typical cause is mitral regurgitation"],
     1,
-    "本例は収縮期逆流性雑音で，その音量は収縮期を通じ概ね一定である．このタイプの心雑音を呈する疾患は，僧帽弁逆流症・三尖弁逆流症・心室中隔欠損症の3つにほぼ限られる．"
+    "This is a systolic regurgitant murmur with roughly constant intensity throughout systole. Conditions producing this murmur pattern are essentially limited to mitral regurgitation, tricuspid regurgitation, and ventricular septal defect."
   ],
   [
-    "問題40：僧帽弁逆流症を示唆する心雑音で正しいものはどれか．",
-    ["収縮期の逆流性雑音", "心尖部あるいはその周辺に最強点", "雑音が鎖骨へあまり放散しない", "上記のすべて"],
+    "Q40: Which of the following is correct regarding a murmur suggesting mitral regurgitation?",
+    ["A systolic regurgitant murmur", "Point of maximal intensity at or near the apex", "Minimal radiation to the clavicle", "All of the above"],
     3,
-    "大動脈弁狭窄音は鎖骨や頸部に放散しやすいが，僧帽弁逆流音は放散しにくい．よって両者の鑑別には鎖骨の聴診が有用である（頸部の聴診では呼吸音が大きい）．"
+    "The murmur of aortic stenosis radiates readily to the clavicle and neck, while the murmur of mitral regurgitation does not. Clavicular auscultation is therefore useful for distinguishing the two (less respiratory noise than auscultation of the neck)."
   ],
   [
-    "問題41：心雑音を指摘され受診<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q41.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["収縮期雑音", "拡張期雑音", "往復雑音", "連続性雑音"],
+    "Q41: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q41.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Systolic murmur", "Diastolic murmur", "To-and-fro murmur", "Continuous murmur"],
     0,
-    "本例は大動脈弁狭窄症で，収縮期の駆出性（漸増・漸減するダイヤモンド型）雑音を呈している．同疾患では頸部や鎖骨にも雑音が放散する．"
+    "This patient has aortic stenosis with a systolic ejection (crescendo-decrescendo, diamond-shaped) murmur. The murmur radiates to the neck and clavicles."
   ],
   [
-    "問題42：心雑音を指摘され受診<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q41.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["Ⅰ音（S1）を聴取", "Ⅱ音（S2）を聴取", "鎖骨に心雑音が放散", "上記のすべて"],
+    "Q42: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q41.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["S1 is audible", "S2 is audible", "The murmur radiates to the clavicle", "All of the above"],
     3,
-    "本例のような大動脈弁狭窄症に伴う心雑音は，鎖骨に放散することが多い．よって僧帽弁逆流症との鑑別には鎖骨の聴診が有用である（左右どちらでもOK）．"
+    "In aortic stenosis, the murmur typically radiates to the clavicle, making clavicular auscultation useful for differentiating from mitral regurgitation (either side is acceptable)."
   ],
   [
-    "問題43：心雑音を指摘され受診<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q43.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["収縮期雑音", "拡張期雑音", "往復雑音", "連続性雑音"],
+    "Q43: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q43.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Systolic murmur", "Diastolic murmur", "To-and-fro murmur", "Continuous murmur"],
     0,
-    "本例は僧帽弁逆流症で，収縮期の逆流性（漸増・漸減しない平坦型）雑音を呈している．鎖骨への放散はあまり目立たない．"
+    "This patient has mitral regurgitation with a systolic regurgitant (plateau-shaped, non-crescendo-decrescendo) murmur. Clavicular radiation is not prominent."
   ],
   [
-    "問題44：心雑音を指摘され受診<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q43.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["Ⅰ音（S1）を聴取", "Ⅱ音（S2）を聴取", "鎖骨に心雑音が放散", "Ⅰ音（S1）とⅡ音（S2）は雑音に埋没"],
+    "Q44: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q43.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["S1 is audible", "S2 is audible", "The murmur radiates to the clavicle", "S1 and S2 are buried within the murmur"],
     3,
-    "本例のような僧帽弁逆流症の聴診では，心音が雑音に埋没して不明瞭になることが多い．また心雑音が鎖骨へあまり放散しないため，大動脈弁狭窄症との鑑別に有用である．"
+    "In mitral regurgitation, the heart sounds are often obscured by the murmur, and clavicular radiation is minimal — helping distinguish it from aortic stenosis."
   ],
   [
-    "問題45：心不全の組織低灌流/低心拍出に典型的な症状はどれか．",
-    ["易疲労", "倦怠感", "運動耐容能の低下", "上記のすべて"],
+    "Q45: Which symptom is typical of low output/tissue hypoperfusion in heart failure?",
+    ["Fatigue", "Malaise", "Reduced exercise tolerance", "All of the above"],
     3,
-    "非典型的な症状として，めまい・失神，認知機能低下，せん妄，うつがガイドラインに記載されている．"
+    "Atypical symptoms include dizziness/syncope, cognitive impairment, delirium, and depression."
   ],
   [
-    "問題46：心不全の組織低灌流/低心拍出で出現する身体所見はどれか．",
-    ["チェーン・ストークス呼吸", "末梢冷感", "筋量減少/悪液質", "上記のすべて"],
+    "Q46: Which physical finding is associated with low output/tissue hypoperfusion in heart failure?",
+    ["Cheyne-Stokes respiration", "Cool peripheries", "Muscle wasting/cachexia", "All of the above"],
     3,
-    "その他の所見として，脈圧狭小や尿量減少，体重減少がガイドラインに記載されている．"
+    "Other findings include narrow pulse pressure, reduced urine output, and weight loss."
   ],
   [
-    "問題47：心不全の病態を評価するノーリア・スティーブンソン分類で予後が最も悪いのはどれか．",
-    ["A：うっ血なし＋低灌流なし（dry-warm）", "B：うっ血あり＋低灌流なし（wet-warm）", "C：うっ血あり＋低灌流あり（wet-cold）", "L：うっ血なし＋低灌流あり（dry-cold）"],
+    "Q47: In the Nohria-Stevenson classification used to assess heart failure hemodynamics, which profile has the worst prognosis?",
+    ["A: no congestion + no hypoperfusion (dry-warm)", "B: congestion + no hypoperfusion (wet-warm)", "C: congestion + hypoperfusion (wet-cold)", "L: no congestion + hypoperfusion (dry-cold)"],
     2,
-    "オリジナルの報告（J Am Coll Cardiol 2003;41:1797-804）では，A，L，B，Cの順に予後が不良であった．"
+    "In the original report (J Am Coll Cardiol 2003;41:1797-804), prognosis was worst in the order A, L, B, C."
   ],
   [
-    "問題48：ノーリア・スティーブンソン分類で低灌流を示唆する身体所見はどれか．",
-    ["小さい脈圧", "四肢冷感", "傾眠傾向", "上記のすべて"],
+    "Q48: Which physical finding suggests hypoperfusion in the Nohria-Stevenson classification?",
+    ["Narrow pulse pressure", "Cool extremities", "Somnolence", "All of the above"],
     3,
-    "小さい脈圧は，（収縮期血圧－拡張期血圧）/収縮期血圧＜25％で定義される．採血データでは低ナトリウム血症（目安：135 mEq/L以下）や腎機能の悪化が提唱されている．"
+    "Narrow pulse pressure is defined as (SBP - DBP)/SBP < 25%. Laboratory markers include hyponatremia (Na <135 mEq/L) and worsening renal function."
   ],
   [
-    "問題49：感染性心内膜炎が疑われるときに確認すべき口腔内の所見は何か ．",
-    ["粘膜出血", "齲歯", "不衛生", "上記のすべて"],
+    "Q49: Which oral cavity finding should be sought when infective endocarditis is suspected?",
+    ["Mucosal hemorrhage", "Dental caries", "Poor dental hygiene", "All of the above"],
     3,
-    "いずれの所見も感染性心内膜炎あるいはそのリスクと関連する．発熱症例で感染性心内膜炎を疑えば，心エコーを行う前に口腔内を確認しておきたい．"
+    "All of these findings are associated with infective endocarditis or its risk. In a febrile patient with suspected endocarditis, the oral cavity should be examined before echocardiography."
   ],
   [
-    "問題50：発熱が持続する高齢者の口腔内所見<br><img src='q50.jpeg' style='width:100%; max-width:600px; height:auto;' alt='口腔内'><br>正しいのはどれか．",
-    ["点状出血を認める", "潰瘍を認める", "腫瘍を認める", "異常はない"],
+    "Q50: Oral cavity findings in an elderly patient with persistent fever<br><img src='q50.jpeg' style='width:100%; max-width:600px; height:auto;' alt='Oral cavity'><br>Which of the following is correct?",
+    ["Petechiae are present", "An ulcer is present", "A tumor is present", "No abnormality"],
     0,
-    "粘膜に散在する小さな点状出血を見落とさないようにしたい．本例は最終的にメチシリン耐性黄色ブドウ球菌による僧帽弁の感染性心内膜炎と診断された．"
+    "Small petechiae scattered over the mucosa should not be overlooked. This patient was ultimately diagnosed with methicillin-resistant Staphylococcus aureus infective endocarditis of the mitral valve."
   ],
   [
-    "問題51：発熱持続例の右趾（圧痛なし）<br><img src='q51.png' style='width:100%; max-width:600px; height:auto;' alt='右趾'><br>正しいものはどれか．",
-    ["第2趾の腹側に紅斑", "感染性心内膜炎で出現することがある", "ジェインウェイ病変と呼ばれている", "上記のすべて"],
+    "Q51: Right toe in a patient with persistent fever (non-tender)<br><img src='q51.png' style='width:100%; max-width:600px; height:auto;' alt='Right toe'><br>Which of the following is correct?",
+    ["Erythema on the plantar surface of the 2nd toe", "Can occur in infective endocarditis", "Called a Janeway lesion", "All of the above"],
     3,
-    "敗血症性の血管塞栓を反映するジェインウェイ病変は，感染性心内膜炎のDuke-ISCVID基準にも臨床診断の小基準として明記されている．"
+    "Janeway lesions — reflecting septic vascular emboli — are listed as minor clinical criteria in the Duke-ISCVID criteria for infective endocarditis."
   ],
   [
-    "問題52：ジェインウェイ病変で<span class='underline'>誤り</span>はどれか．",
-    ["四肢末端に出現することが多い", "感染性心内膜炎に対する感度は必ずしも高くない", "感染性心内膜炎に対する特異度は高い", "疼痛を伴う"],
+    "Q52: Which of the following is <span class='underline'>incorrect</span> regarding Janeway lesions?",
+    ["Predominantly found at the distal extremities", "Sensitivity for infective endocarditis is not necessarily high", "High specificity for infective endocarditis", "Painful"],
     3,
-    "オスラー結節は免疫学的現象による微小血管炎症を反映するため疼痛を伴う．一方，血管塞栓を反映するジェインウェイ病変は無痛性である．"
+    "Osler's nodes are painful because they reflect immune-mediated microvasculitis. In contrast, Janeway lesions are painless, reflecting septic vascular emboli."
   ],
   [
-    "問題53：非代償性心不全例（座位）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q53.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["右鎖骨上窩に周期的な陥凹", "左鎖骨上窩に周期的な陥凹", "健常者でも同様の所見を認める", "右房圧は正常範囲内"],
+    "Q53: Patient with decompensated heart failure (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q53.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Periodic depression in the right supraclavicular fossa", "Periodic depression in the left supraclavicular fossa", "Similar findings can be seen in healthy individuals", "Right atrial pressure is within the normal range"],
     0,
-    "頸静脈の座位定性法では右側で判定する．なぜなら左内頸静脈と右房は直線的な解剖学的関係にないため，右房圧が正確に伝達されない．"
+    "The seated qualitative method for jugular venous assessment uses the right side. The left internal jugular vein lacks a straight anatomical relationship with the right atrium, so right atrial pressure cannot be accurately transmitted."
   ],
   [
-    "問題54：労作時の息切れで来院（座位）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q54.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["右頸部～耳垂に拍動", "右房圧は高度に上昇", "非代償性の心不全と考えられる", "上記のすべて"],
+    "Q54: Patient presenting with exertional dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q54.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Pulsation visible from the right neck to the earlobe", "Right atrial pressure is markedly elevated", "Decompensated heart failure is considered", "All of the above"],
     3,
-    "内頸静脈の拍動上縁が高い程，右房圧は上昇していると考えられる．特に本例のように耳垂の拍動は耳ウインクサインと呼ばれて，重症の心不全を示唆する．"
+    "The higher the upper border of internal jugular pulsation, the greater the right atrial pressure. When pulsation reaches the earlobe, as in this patient, it is called the 'ear wink sign' and suggests severe heart failure."
   ],
   [
-    "問題55：重症の三尖弁逆流を認める症例（座位）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q55.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br><span class='underline'>誤り</span>はどれか．",
-    ["内頸静脈の拍動は隆起", "内頸静脈の拍動は陥凹", "隆起する拍動は動脈との鑑別が必要", "外頸静脈の怒張"],
+    "Q55: Patient with severe tricuspid regurgitation (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q55.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["Internal jugular pulsations are outward (positive waves)", "Internal jugular pulsations are inward (negative deflections)", "Outward pulsations require differentiation from arterial pulsation", "Distension of the external jugular vein"],
     1,
-    "内頸静脈は陥凹する場合が多いが，右房圧が高度に上昇すると隆起に転じる（ランチシ徴候）．ただし触診などで頸動脈との鑑別が必要である（例：ランチシ徴候なら軽い用手的圧迫で容易に消失）．"
+    "Internal jugular pulsations are usually inward (negative), but when right atrial pressure is markedly elevated they may become outward (Lancisi's sign). Differentiation from carotid arterial pulsation is required (e.g., Lancisi's sign easily obliterated by gentle manual compression)."
   ],
   [
-    "問題56：重症の大動脈弁逆流を認める症例（座位）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q56.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["頸動脈の急速な隆起と虚脱", "一回拍出量が増加した大脈を反映", "用手的圧迫による拍動消失は困難", "上記のすべて"],
+    "Q56: Patient with severe aortic regurgitation (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q56.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Rapid rise and collapse of the carotid artery", "Reflects a large stroke volume", "Difficult to obliterate with gentle manual pressure", "All of the above"],
     3,
-    "このような頸動脈拍動はコリガン脈と呼ばれている（頸静脈拍動と異なり左側にも出現）．本例は頭部の前後の揺れ（ドミュセー徴候）も認める．いずれも重症の大動脈弁逆流で出現することがある．"
+    "This type of carotid pulsation is called Corrigan's pulse (also visible on the left side, unlike jugular pulsations). This patient also demonstrates head bobbing (de Musset's sign). Both can occur with severe aortic regurgitation."
   ],
   [
-    "問題57：労作時の息切れで来院<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q57.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>疑われる疾患はどれか．",
-    ["心アミロイドーシス", "肥大型心筋症", "大動脈弁狭窄症", "高血圧性心疾患"],
+    "Q57: Patient presenting with exertional dyspnea<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q57.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which disease is suspected?",
+    ["Cardiac amyloidosis", "Hypertrophic cardiomyopathy", "Aortic stenosis", "Hypertensive heart disease"],
     0,
-    "手根管症候群では，母指と示指で正円を作ることが難しくなる（OKサインができない）．そして手根管症候群はトランスサイレチン型（ATTR）心アミロイドーシスに合併することが少なくない．"
+    "Carpal tunnel syndrome makes it difficult to form a perfect circle with the thumb and index finger (loss of the 'OK sign'). Carpal tunnel syndrome is not uncommonly associated with transthyretin (ATTR) cardiac amyloidosis."
   ],
   [
-    "問題58：トランスサイレチン型（ATTR）心アミロイドーシスに合併する身体所見はどれか．",
-    ["OKサインが困難", "ポパイ徴候の出現", "Ⅳ音（S4）の欠如", "上記のすべて"],
+    "Q58: Which physical finding is associated with transthyretin (ATTR) cardiac amyloidosis?",
+    ["Difficulty making the OK sign", "Popeye sign", "Absence of S4", "All of the above"],
     3,
-    "OKサイン（母指と示指で正円を作ること）は手根管症候群で困難になり，肘屈曲時の力こぶ（ポパイ徴候）はアミロイド沈着による腱断裂が原因．肥大心にも関わらずⅣ音（S4）を欠く理由は，心房へのアミロイド沈着と考えられている．"
+    "The OK sign (forming a perfect circle with thumb and index finger) is impaired by carpal tunnel syndrome. The Popeye sign (biceps muscle prominence on elbow flexion) results from tendon rupture due to amyloid deposition. The absence of S4 despite hypertrophy is attributed to amyloid deposition in the atria."
   ],
   [
-    "問題59：息切れで来院（座位）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q60.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>疑われる病態はどれか．",
-    ["心不全なし", "心不全あり（軽症）", "心不全あり（重症）", "心不全の有無は判定できない"],
+    "Q59: Patient with dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q60.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which hemodynamic state is suspected?",
+    ["No heart failure", "Mild heart failure", "Severe heart failure", "Cannot determine"],
     2,
-    "座位で内頸静脈の拍動上縁が顎下まで達しているため，右房圧が高度に上昇した非代償性心不全と診断できる．なお隆起性の拍動（陽性波）であるため触診で動脈性拍動（コリガン脈）の除外を要す．"
+    "The upper border of internal jugular pulsation reaches the mandible in the seated position, indicating severely elevated right atrial pressure — consistent with decompensated heart failure. The outward (positive) pulsation requires exclusion of arterial pulsation (Corrigan's pulse) by palpation."
   ],
   [
-    "問題60：息切れで来院（座位）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q60.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>疑われる病態はどれか．",
-    ["心房細動", "虚血性心疾患", "開心術後", "上記のすべて"],
+    "Q60: Patient with dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q60.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is suspected?",
+    ["Atrial fibrillation", "Ischemic heart disease", "Prior open-heart surgery", "All of the above"],
     3,
-    "本例の拍動は不規則であるため心房細動が示唆される．耳垂の皺（フランク徴候）からは冠動脈疾患が疑われ，前胸部の手術創（右下の縦線）は開心術（冠動脈バイパス術）を想起させる．視診だけでここまで予想できる．"
+    "The irregular pulsation suggests atrial fibrillation. The earlobe crease (Frank's sign) raises suspicion of coronary artery disease, and the surgical scar on the anterior chest (vertical line, lower right) is suggestive of prior cardiac surgery (coronary artery bypass grafting). Inspection alone can reveal so much."
   ],
   [
-    "問題61：前屈呼吸苦（ベンド[プ]ニア）で正しいのはどれか．",
-    ["心不全とは無関係", "体うっ血のみで出現", "肺うっ血のみで出現", "体うっ血でも肺うっ血でも出現"],
+    "Q61: Which of the following is correct regarding bendopnea?",
+    ["Unrelated to heart failure", "Occurs with systemic congestion only", "Occurs with pulmonary congestion only", "Can occur with either systemic or pulmonary congestion"],
     3,
-    "前屈呼吸苦（ベンド[プ]ニア）は前かがみになると息苦しさを感じることで，靴紐を結ぶときなどに症状が出現する．典型的な心不全症状の一つで，体うっ血でも肺うっ血でも認められる．"
+    "Bendopnea is dyspnea that occurs when bending forward, such as when tying shoelaces. It is one of the typical heart failure symptoms and can occur with both systemic and pulmonary congestion."
   ],
   [
-    "問題62：前屈呼吸苦（ベンド[プ]ニア）で正しいのはどれか．",
-    ["出現頻度は高くはない", "機序は心房圧がさらに上昇するため", "前屈10秒前後で出現することが多い", "上記のすべて"],
+    "Q62: Which of the following is correct regarding bendopnea?",
+    ["Not a frequent symptom", "Mechanism involves further elevation of atrial pressure on bending", "Often occurs within about 10 seconds of bending", "All of the above"],
     3,
-    "前屈呼吸苦（ベンド[プ]ニア）の機序は，右房圧や肺動脈楔入圧の上昇時に，前かがみでさらに圧が上昇するためである（特に心拍出量の低下時）．出現頻度は必ずしも高くはないが，心不全が疑われる症例では確認しておきたい．"
+    "The mechanism of bendopnea is further elevation of right atrial pressure and pulmonary capillary wedge pressure on bending — particularly with reduced cardiac output. It is not always frequent but should be assessed in patients with suspected heart failure."
   ],
   [
-    "問題63：僧帽弁逆流症の身体所見で正しいのはどれか．",
-    ["心尖拍動が左外側に偏位", "全収縮期雑音", "Ⅲ音（S3）", "上記のすべて"],
+    "Q63: Which physical finding is correct regarding mitral regurgitation?",
+    ["Apical impulse displaced laterally", "Holosystolic murmur", "S3", "All of the above"],
     3,
-    "視診と触診では左室拡大に伴って心尖拍動が左下方向に偏位する．聴診では全収縮期雑音とⅢ音（S3）が特徴的である．（ガイドラインより）"
+    "Inspection and palpation reveal lateral and downward displacement of the apical impulse due to left ventricular enlargement. Auscultation reveals a holosystolic murmur and S3."
   ],
   [
-    "問題64：僧帽弁逆流の雑音で正しいのはどれか．",
-    ["逸脱例では収縮後期に増大", "急性の重症例ではダイヤモンド型", "重症例では拡張中期ランブル（カーリー・クームス雑音）", "上記のすべて"],
+    "Q64: Which of the following is correct regarding the murmur of mitral regurgitation?",
+    ["In prolapse, intensity increases in late systole", "In acute severe cases, the murmur is diamond-shaped", "In severe cases, a mid-diastolic rumble (Carey Coombs murmur)", "All of the above"],
     3,
-    "僧帽弁逆流雑音は基本的に全収縮期雑音（一定の音量が持続する平坦型）である．しかしその病態は多彩であり，上記のような所見を呈することもある．"
+    "The murmur of mitral regurgitation is basically a plateau-shaped holosystolic murmur, but its character is varied and may present as described above."
   ],
   [
-    "問題65：僧帽弁狭窄症（MS）の聴診で正しいのはどれか．",
-    ["Ⅰ音（S1）の亢進", "僧帽弁開放音", "心尖部で拡張中期ランブル", "上記のすべて"],
+    "Q65: Which of the following is correct regarding auscultation in mitral stenosis (MS)?",
+    ["Loud S1", "Opening snap", "Mid-diastolic rumble at the apex", "All of the above"],
     3,
-    "上記が組み合わされてMSメロディーと呼ばれる特有のリズムを形成する（フォッ・タ・タ・ル～）．ただし狭窄の重症化が進むと，弁の可動性が低下するため僧帽弁開放音は消失する．"
+    "These findings combine to create the characteristic 'MS melody' rhythm (S1-opening snap-rumble). However, as stenosis worsens, valve mobility decreases and the opening snap disappears."
   ],
   [
-    "問題66：三尖弁逆流症の身体所見で正しいのはどれか．",
-    ["頸静脈の隆起性拍動", "前胸部の全収縮期雑音", "下腿浮腫", "上記のすべて"],
+    "Q66: Which physical finding is correct regarding tricuspid regurgitation?",
+    ["Outward jugular venous pulsations", "Holosystolic murmur at the left sternal border", "Lower extremity edema", "All of the above"],
     3,
-    "三尖弁逆流症に伴う心雑音では，吸気時に雑音の音量が増強するリベロ･カルバイヨ徴候が有名である．なお三尖弁逆流が重症化すると，全収縮期雑音が漸減性になったり，音量が減少して完全に消失したりすることもある．"
+    "The Rivero-Carvallo sign — increased murmur intensity on inspiration — is well known. As tricuspid regurgitation worsens, the holosystolic murmur may become decrescendo or disappear entirely."
   ],
   [
-    "問題67：慢性の大動脈弁逆流症の身体所見で<span class='underline'>誤り</span>はどれか．",
-    ["心尖拍動の外側偏位", "拡張期雑音", "脈圧の減少", "二峰性の頸動脈波"],
+    "Q67: Which of the following is <span class='underline'>incorrect</span> regarding physical findings in chronic aortic regurgitation?",
+    ["Lateral displacement of the apical impulse", "Diastolic murmur", "Decreased pulse pressure", "Bisferious carotid pulse"],
     2,
-    "慢性の大動脈弁逆流では，収縮期血圧が上昇し拡張期血圧が低下するため，その差である脈圧は増大する．一方，急性の大動脈弁逆流では，これらの身体所見は不明瞭なことが多い．"
+    "In chronic aortic regurgitation, systolic BP rises and diastolic BP falls, resulting in an increased pulse pressure. In contrast, in acute aortic regurgitation, these physical findings are often absent."
   ],
   [
-    "問題68：慢性の大動脈弁逆流症で特徴的な身体所見はどれか．",
-    ["ドミュセー徴候", "コリガン脈", "クインケ徴候", "上記のすべて"],
+    "Q68: Which physical finding is characteristic of chronic aortic regurgitation?",
+    ["de Musset's sign", "Corrigan's pulse", "Quincke's sign", "All of the above"],
     3,
-    "ガイドラインにはドミュセー徴候（頭部の前後の揺れ）やコリガン脈（頸動脈の急速な隆起と虚脱）， クインケ徴候（爪床の色調変化）に加えて，トラウベ徴候（大腿動脈で聴取される鋭い音） が記載されている．"
+    "Also notable are de Musset's sign (head bobbing), Corrigan's pulse (rapid carotid rise and collapse), Quincke's sign (nail bed capillary pulsation), and Traube's sign (pistol-shot sounds over the femoral artery)."
   ],
   [
-    "問題69：大動脈弁狭窄症の身体所見で正しいのはどれか．",
-    ["収縮期の駆出性雑音", "立ち上がりが遅い頸動脈拍動", "鶏冠状の頸動脈スリル（振動）", "上記のすべて"],
+    "Q69: Which physical finding is correct regarding aortic stenosis?",
+    ["Systolic ejection murmur", "Slow-rising carotid pulse", "Carotid shudder (vibration)", "All of the above"],
     3,
-    "大動脈弁狭窄症では，雑音が鎖骨～頸部に放散することが特徴的である．なお雑音の音量から大動脈弁狭窄の重症度を判定することは困難と考えられている（例：重症例の一部では左室機能障害で一回拍出量が減少して音量が低下）．"
+    "The characteristic radiation of the murmur to the clavicle and neck is a hallmark of aortic stenosis. Note that murmur intensity alone is a poor indicator of severity (in some severe cases, low stroke volume reduces murmur intensity)."
   ],
   [
-    "問題70：大動脈弁狭窄症の雑音の最強点はどこか．",
-    ["第2肋間胸骨右縁", "第3肋間胸骨左縁", "心尖部", "決まっていない"],
+    "Q70: Where is the point of maximal intensity of the murmur of aortic stenosis?",
+    ["Right sternal border, 2nd intercostal space", "Left sternal border, 3rd intercostal space", "Cardiac apex", "No fixed location"],
     3,
-    "大動脈弁狭窄症の雑音は第2肋間胸骨右縁～心尖部の広い範囲で聴取される（たすき掛け部分と言われている）．一方，僧帽弁逆流症の雑音は通常，心尖部近辺に最強点がある．"
+    "The murmur of aortic stenosis is audible over a wide area from the right 2nd intercostal space to the apex (the so-called 'sash area'). In contrast, the murmur of mitral regurgitation typically has its point of maximal intensity near the apex."
   ],
   [
-    "問題71：肥大型心筋症で認める身体所見はどれか．",
-    ["Ⅳ音（S4）", "立ち上がりの速い頸動脈拍動", "二峰性の心尖拍動", "上記のすべて"],
+    "Q71: Which physical finding can be present in hypertrophic cardiomyopathy?",
+    ["S4", "Rapid-rising carotid pulse", "Double apical impulse", "All of the above"],
     3,
-    "肥大型心筋症では，閉塞機転の有無に関わらずⅣ音（S4）を高頻度に聴診する．これは強い心房収縮による左室流入血が左室圧を急激に上昇させ，同時に硬い心室を振動させるためである．また心尖部でA波を触知する結果，抬起性心尖拍動と合わせて二峰性になることがある．"
+    "S4 is heard frequently in HCM regardless of obstruction. This is because forceful atrial contraction rapidly elevates LV pressure and simultaneously vibrates the stiff ventricular wall. A palpable A wave at the apex may combine with a sustained apical impulse to create a double pattern."
   ],
   [
-    "問題72：閉塞性肥大型心筋症で認める身体所見はどれか．",
-    ["単一Ⅱ音（S2）または奇異性分裂", "頸動脈の二峰性拍動", "収縮期の駆出性雑音", "上記のすべて"],
+    "Q72: Which physical finding can be present in obstructive HCM?",
+    ["Single S2 or paradoxical splitting", "Bisferious carotid pulse", "Systolic ejection murmur", "All of the above"],
     3,
-    "左室流出路狭窄を伴う閉塞性肥大型心筋症では，駆出時間が延長するためⅡ音（S2）が単一になり，一部の症例は奇異性分裂を呈する．また頸動脈拍動がスパイク＆ドーム型の二峰性になる．"
+    "In obstructive HCM with LVOT obstruction, prolonged ejection time causes S2 to become single, and some cases show paradoxical splitting. The carotid pulse may have a spike-and-dome (bisferious) pattern."
   ],
   [
-    "問題73：肺高血圧症で認めるチアノーゼはどれか．",
-    ["中枢性", "末梢性", "混合性", "上記のすべて"],
+    "Q73: Which type of cyanosis is seen in pulmonary hypertension?",
+    ["Central", "Peripheral", "Mixed", "All of the above"],
     3,
-    "チアノーゼは，動脈血中の酸素飽和度低下が原因の中枢性と，動脈血中の酸素飽和度は正常で末梢循環不全が主因の末梢性，両者が共存する混合性に分類できる．肺高血圧症ではいずれの病態も出現しうる．"
+    "Cyanosis is classified as central (reduced arterial oxygen saturation), peripheral (normal arterial saturation with impaired peripheral circulation), and mixed. All three can occur in pulmonary hypertension."
   ],
   [
-    "問題74：肺高血圧症で認める聴診所見はどれか．",
-    ["Ⅱ音（S2）肺動脈成分の亢進", "胸骨左縁上部の拡張期逆流性雑音", "胸骨左縁下部の収縮期雑音", "上記のすべて"],
+    "Q74: Which auscultatory finding can be present in pulmonary hypertension?",
+    ["Accentuated pulmonic component of S2", "High-pitched diastolic murmur at the upper left sternal border", "Systolic murmur at the lower left sternal border", "All of the above"],
     3,
-    "肺高血圧に伴う肺動脈弁逆流では，胸骨左縁上部で高調な拡張期雑音を聴取することがあり，グラハム・スティール雑音と呼ばれている．一方，胸骨左縁下部では，三尖弁逆流に由来する全収縮期雑音を聴くことが多い．"
+    "Pulmonary regurgitation due to pulmonary hypertension can produce a high-pitched diastolic murmur at the upper left sternal border (Graham Steell murmur). Tricuspid regurgitation is also common, producing a holosystolic murmur at the lower left sternal border."
   ],
   [
-    "問題75：肺高血圧症で特徴的な傍胸骨拍動はどれか．",
-    ["触れない", "タッピング", "抬起性", "二峰性"],
+    "Q75: Which type of parasternal impulse is characteristic of pulmonary hypertension?",
+    ["Not palpable", "Tapping", "Heaving (sustained)", "Bifid"],
     2,
-    "傍胸骨拍動は健常者では触知されないが，右室拡大が進行すると触知されるようになる．特に持続時間の長い（＝抬起性）右室拍動を触れた場合には，右室収縮期圧が60mmHg以上であると考えられる．ただしその感度は必ずしも高くないため，傍胸骨拍動を触れなくても肺高血圧症を否定することはできない．"
+    "The parasternal impulse is not palpable in healthy individuals, but becomes palpable as the right ventricle enlarges. A sustained (heaving) right ventricular impulse suggests right ventricular systolic pressure ≥60 mmHg. However, sensitivity is not always high — a negative finding does not rule out pulmonary hypertension."
   ],
   [
-    "問題76：肺高血圧症の進行時の所見はどれか．",
-    ["肝腫大や腹水", "下腿の浮腫", "四肢の冷感", "上記のすべて"],
+    "Q76: Which finding is present in advanced pulmonary hypertension?",
+    ["Hepatomegaly or ascites", "Lower extremity edema", "Cool extremities", "All of the above"],
     3,
-    "右心不全を呈すると，肝腫大や下腿浮腫，腹水などがみられる．また，低心拍出量による末梢循環不全が顕著になると，四肢の冷感や末梢チアノーゼが出現する．"
+    "Right heart failure produces hepatomegaly, lower extremity edema, and ascites. As peripheral circulatory failure from low cardiac output worsens, cool extremities and peripheral cyanosis emerge."
   ],
   [
-    "問題77：チアノーゼで<span class='underline'>誤り</span>はどれか．",
-    ["皮膚や粘膜の青紫色変化", "細血管の還元Hb≧5 g/dlで出現", "中枢性と末梢性に大別", "低酸素血症に特異的"],
+    "Q77: Which of the following is <span class='underline'>incorrect</span> regarding cyanosis?",
+    ["Bluish-purple discoloration of the skin and mucous membranes", "Appears when capillary reduced Hb ≥5 g/dL", "Classified as central or peripheral", "Specific for hypoxemia"],
     3,
-    "チアノーゼは低酸素血症に特異的ではない（例：CO中毒の低酸素血症ではチアノーゼは出現せず）．なおチアノーゼの分類には中枢性と末梢性に加えて，ヘモグロビンの異常による血液性もある（メトヘモグロビン血症など）．"
+    "Cyanosis is not specific for hypoxemia (e.g., CO poisoning causes hypoxemia without cyanosis). Cyanosis is also classified as 'hemic' due to abnormal hemoglobin (e.g., methemoglobinemia)."
   ],
   [
-    "問題78：チアノーゼで<span class='underline'>誤り</span>はどれか．",
-    ["中枢性は全身に出現する", "末梢性では末端に限局する", "末梢性では動脈の酸素飽和度が低下", "分離性では上半身と下半身で程度が異なる"],
+    "Q78: Which of the following is <span class='underline'>incorrect</span> regarding cyanosis?",
+    ["Central cyanosis appears throughout the body", "Peripheral cyanosis is limited to the distal extremities", "In peripheral cyanosis, arterial oxygen saturation is reduced", "In differential cyanosis, severity differs between upper and lower body"],
     2,
-    "中枢性チアノーゼでは動脈・毛細血管・静脈すべてで酸素飽和度が低下する．一方，末梢性チアノーゼでは毛細血管と静脈では低下するが，動脈の酸素飽和度は正常である．分離性チアノーゼ（Differential cyanosis，上下差異性チアノーゼ）の代表疾患としてアイゼンメンジャー化した動脈管開存症がある（下半身優位のチアノーゼ ）．"
+    "In central cyanosis, oxygen saturation is reduced in arteries, capillaries, and veins. In peripheral cyanosis, capillary and venous saturation are reduced but arterial saturation is normal. The classic example of differential cyanosis is Eisenmenger's syndrome due to patent ductus arteriosus (cyanosis predominant in lower body)."
   ],
   [
-    "問題79：健常者の心機図<br><img src='q79.jpg' style='width:100%; max-width:600px; height:auto;' alt='心機図'><br><span class='underline'>誤り</span>はどれか．",
-    ["黒線（上段）＝心電図", "緑線（中段）＝心音図", "赤線（下段）＝頸静脈波", "赤線（下段）＝頸動脈波"],
+    "Q79: Phonocardiogram from a healthy individual<br><img src='q79.jpg' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["Black trace (top) = ECG", "Green trace (middle) = phonocardiogram", "Red trace (bottom) = jugular venous pulse", "Red trace (bottom) = carotid arterial pulse"],
     3,
-    "健常者の頸静脈波は基本的に3つの陽性波（a，c，v）と2つの陰性波（x，y）で構成される．一般に頸動脈は隆起として触知されるが，頸静脈は二峰性の陥凹（x，y）として視認されることが多い．"
+    "The normal jugular venous pulse consists of three positive waves (a, c, v) and two negative deflections (x, y). The carotid artery is generally felt as an outward pulsation, while the jugular vein is most often visualized as a bifid inward movement (x and y descents)."
   ],
   [
-    "問題80：健常者の頸静脈波形<br><img src='q79.jpg' style='width:100%; max-width:600px; height:auto;' alt='心機図'><br>上記の波形で<span class='underline'>誤り</span>はどれか．",
-    ["a波 ➜ 右室の収縮", "c波 ➜ 三尖弁の右房側への膨隆", "x下降 ➜ 右房の拡張", "v波 ➜ 静脈還流による右房の充満"],
+    "Q80: Normal jugular venous waveform<br><img src='q79.jpg' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["a wave → right ventricular contraction", "c wave → bulging of the tricuspid valve toward the right atrium", "x descent → right atrial relaxation", "v wave → right atrial filling from venous return"],
     0,
-    "a波の主たる成因は，右室ではなく右房の収縮である．y下降は三尖弁の開放による右房圧の低下を反映するが，明瞭でない症例も少なくない．"
+    "The a wave is primarily generated by right atrial (not right ventricular) contraction. The y descent reflects the fall in right atrial pressure following tricuspid valve opening, though it may not be prominent in all patients."
   ],
   [
-    "問題81：心雑音と息切れで受診<br><img src='q81.png' style='width:100%; max-width:600px; height:auto;' alt='心機図'><br>正しいのはどれか．",
-    ["黒線（上段）＝心音図", "青線（中段）＝心電図", "赤線（下段）＝頸静脈波", "赤線（下段）＝頸動脈波"],
+    "Q81: Patient presenting with a cardiac murmur and dyspnea<br><img src='q81.png' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which of the following is correct?",
+    ["Black trace (top) = phonocardiogram", "Blue trace (middle) = ECG", "Red trace (bottom) = jugular venous pulse", "Red trace (bottom) = carotid arterial pulse"],
     3,
-    "頸動脈波は，立ち上がり点が左室収縮の開始点（R波）付近と一致し，大動脈弁閉鎖（Ⅱ音 [S2]）の直後に切痕が生じる．頸静脈は陥凹として視認されることが多いが，頸動脈は隆起として触知される．"
+    "The carotid arterial pulse rises near the onset of LV contraction (near the R wave) and shows a notch just after aortic valve closure (S2). The jugular vein is typically seen as an inward movement, whereas the carotid artery is felt as an outward pulsation."
   ],
   [
-    "問題82：労作時の息切れで受診<br><img src='q81.png' style='width:100%; max-width:600px; height:auto;' alt='心機図'><br>疑われる疾患はどれか．",
-    ["非閉塞性肥大型心筋症", "閉塞性肥大型心筋症", "心尖部肥大型心筋症", "拡張相肥大型心筋症"],
+    "Q82: Patient presenting with exertional dyspnea<br><img src='q81.png' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which disease is suspected?",
+    ["Non-obstructive HCM", "Obstructive HCM", "Apical HCM", "Dilated-phase HCM"],
     1,
-    "本例の頸動脈波の特徴は急峻な立ち上がり（スパイク）とその後の小さな隆起（ドーム）で構成されている．このような二峰性拍動（スパイク＆ドーム形）は閉塞性肥大型心筋症に特徴的である．なおⅣ音（S4）や収縮期駆出性雑音の共存も同疾患に矛盾しない．"
+    "This carotid pulse shows a rapid initial rise (spike) followed by a secondary smaller dome — a bisferious (spike-and-dome) pattern characteristic of obstructive HCM. The co-existing S4 and systolic ejection murmur are also consistent with this diagnosis."
   ],
   [
-    "問題83：心電図異常で受診した症例<br><img src='q83.jpg' style='width:100%; max-width:600px; height:auto;' alt='心機図'><br>最下段の波形はどれか．",
-    ["心音図", "頸動脈波", "頸静脈波", "心尖拍動図"],
+    "Q83: Patient referred for an ECG abnormality<br><img src='q83.jpg' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>What does the bottom trace represent?",
+    ["Phonocardiogram", "Carotid arterial pulse", "Jugular venous pulse", "Apexcardiogram"],
     3,
-    "最下段の波形は心尖拍動である．緩徐流入波に続く心房収縮（A）波と抬起性拍動による二峰性心尖拍動（ダブルインパルス）を呈した異常波形と考えられる．"
+    "The bottom trace is the apexcardiogram. It shows an abnormal bifid pattern with a slow-filling wave followed by an atrial contraction (A) wave and a sustained impulse — consistent with a 'double impulse' pattern."
   ],
   [
-    "問題84：心雑音と息切れのため受診<br><img src='q83.jpg' style='width:100%; max-width:600px; height:auto;' alt='心機図'><br>心機図から疑われる疾患はどれか．",
-    ["非閉塞性肥大型心筋症", "心尖部肥大型心筋症", "心室中部閉塞性肥大型心筋症", "上記のすべて"],
+    "Q84: Patient presenting with a cardiac murmur and dyspnea<br><img src='q83.jpg' style='width:100%; max-width:600px; height:auto;' alt='Phonocardiogram'><br>Which disease is suspected from the phonocardiogram?",
+    ["Non-obstructive HCM", "Apical HCM", "Mid-ventricular obstructive HCM", "All of the above"],
     3,
-    "肥大型心筋症では，表現型（肥大部位）に関わらずⅣ音（S4）が高頻度で，しばしば二峰性心尖拍動を伴う．閉塞性肥大型心筋症では明瞭な駆出性雑音を聴取するが，心室中部閉塞性肥大型心筋症では不明瞭な症例も存在する．"
+    "In HCM, S4 is common regardless of the phenotype (hypertrophy distribution), and a double apical impulse is frequently present. Obstructive HCM produces a prominent ejection murmur, while mid-ventricular obstructive HCM may have a less distinct murmur."
   ],
   [
-    "問題85：息切れと心雑音で受診<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q86.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br><span class='underline'>誤り</span>はどれか．",
-    ["収縮期の雑音", "頸動脈の鋭い立ち上がり", "頸動脈のシャダー", "漸増・漸減する雑音"],
+    "Q85: Patient presenting with dyspnea and a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q86.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is <span class='underline'>incorrect</span>?",
+    ["Systolic murmur", "Rapid-rising carotid pulse", "Carotid shudder", "Crescendo-decrescendo murmur"],
     1,
-    "大きな収縮期駆出性雑音があり，頸動脈は緩徐な立上り（遅脈）で小振動（鶏冠状波形／shudder wave）を伴う．これらの所見はいずれも大動脈弁狭窄症で認められる．"
+    "A loud systolic ejection murmur is present, with a slow-rising carotid pulse (pulsus parvus et tardus) and a fine vibration (shudder wave) — all findings consistent with aortic stenosis."
   ],
   [
-    "問題86：息切れと心雑音で受診<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q86.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>疑われる疾患はどれか．",
-    ["大動脈弁狭窄症（軽症）", "大動脈弁狭窄症（重症）", "肥大型心筋症", "大動脈弁逆流症"],
+    "Q86: Patient presenting with dyspnea and a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q86.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which disease is suspected?",
+    ["Aortic stenosis (mild)", "Aortic stenosis (severe)", "Hypertrophic cardiomyopathy", "Aortic regurgitation"],
     1,
-    "収縮期駆出性雑音があり，Ⅱ音（S2）は小さい．また頸動脈波は緩徐な立上りで，小振動（鶏冠状／シャダー）を認める．これらはいずれも重症の大動脈弁狭窄症を示唆する．なお肥大型心筋症や大動脈弁逆流症では頸動脈の立ち上がりは急峻になる．"
+    "A systolic ejection murmur with a diminished S2, slow-rising carotid pulse, and shudder wave all suggest severe aortic stenosis. HCM and AR typically show rapid-rising carotid pulses."
   ],
   [
-    "問題87：心エコーで左室肥大を指摘され受診<br><img src='q87.png' style='width:100%; max-width:600px; height:auto;' alt='上腕'><br>疑われる疾患はどれか．",
-    ["肥大型心筋症", "大動脈弁狭窄症", "心アミロイドーシス", "ファブリ―病"],
+    "Q87: Patient referred for left ventricular hypertrophy on echocardiography<br><img src='q87.png' style='width:100%; max-width:600px; height:auto;' alt='Upper arm'><br>Which disease is suspected?",
+    ["Hypertrophic cardiomyopathy", "Aortic stenosis", "Cardiac amyloidosis", "Fabry disease"],
     2,
-    "肘を屈曲時，上腕の中央ではなくて少し肘寄りに局所的な隆起が出現している．有名な漫画のキャラクターに類似するためポパイ徴候と呼ばれている．上腕二頭筋の腱断裂が原因で，トランスサイレチン型（ATTR）心アミロイドーシスに合併することが少なくない（腱へのアミロイド沈着による耐張力の低下）．"
+    "On elbow flexion, a focal bulge appears slightly distal to the center of the upper arm — resembling a famous cartoon character, hence the term 'Popeye sign.' This is caused by biceps tendon rupture and is not uncommonly associated with ATTR cardiac amyloidosis (reduced tensile strength from amyloid deposition in tendons)."
   ],
   [
-    "問題88：息切れで来院<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q88.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["コリガン脈", "ランチシ徴候", "クインケ徴候", "上記のすべて"],
+    "Q88: Patient presenting with dyspnea<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q88.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Corrigan's pulse", "Lancisi's sign", "Quincke's sign", "All of the above"],
     2,
-    "爪床の圧迫に伴い周期的な色調変化が出現している．これは大脈を反映する身体所見で，クインケ徴候と呼ばれている．日常診療では大動脈弁逆流症で認めることが多い．"
+    "Periodic color changes in the nail bed with compression reflect a large pulse — Quincke's sign. This is commonly seen in aortic regurgitation in clinical practice."
   ],
   [
-    "問題89：食欲低下と下腿浮腫で来院<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q89.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>疑われる病態はどれか．",
-    ["肺高血圧症", "門脈高血圧症", "本態性高血圧症", "上記のすべて"],
+    "Q89: Patient presenting with reduced appetite and lower extremity edema<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q89.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which hemodynamic state is suspected?",
+    ["Pulmonary hypertension", "Portal hypertension", "Essential hypertension", "All of the above"],
     0,
-    "胸部全体の明瞭な上下運動を認める．これは抬起性の傍胸骨拍動と呼ばれ，肺高血圧のために拡大した右室が胸骨裏面に広く張りつくためである．本例の肺動脈収縮期圧は約80 mmHgと推定された．"
+    "Vigorous up-and-down movement of the entire chest wall is visible — this is a heaving parasternal impulse caused by an enlarged right ventricle pressing broadly against the posterior sternum due to pulmonary hypertension. Estimated pulmonary artery systolic pressure in this patient was approximately 80 mmHg."
   ],
   [
-    "問題90：心電図異常を指摘され受診<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q90.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>疑われる病態はどれか．",
-    ["大腸がん", "イレウス", "尿閉", "腹部大動脈瘤"],
+    "Q90: Patient referred for an ECG abnormality<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q90.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which disease is suspected?",
+    ["Colorectal cancer", "Ileus", "Urinary retention", "Abdominal aortic aneurysm"],
     3,
-    "呼吸に伴う腹壁の上下運動と異なった規則正しい拍動を認める（検者の指に注目）．本例はその後のCTで，腎動脈下〜総腸骨分岐部に最大短径70 mmの腹部大動脈瘤を認めた．通常は無症状であるため，初診時には必ずお腹を触っておきたい．"
+    "A regular pulsation — distinct from respiratory abdominal movement — is visible (note the examiner's finger). Subsequent CT revealed an infrarenal abdominal aortic aneurysm with a maximal short-axis diameter of 70 mm. As this is typically asymptomatic, abdominal palpation should be performed at every initial visit."
   ],
   [
-  "問題91：健常者の心音<br><audio id='audio1' controls src='q91_2L.mp3' onplay='audio2.pause();'></audio><br><audio id='audio2' controls src='q91_apex.mp3' onplay='audio1.pause();'></audio><br>正しい組み合わせはどれか．",
-    ["上：心基部，下：心尖部", "上：心尖部，下：心基部", "いずれも心尖部", "いずれも心基部"],
+  "Q91: Heart sounds from a healthy individual<br><audio id='audio1' controls src='q91_2L.mp3' onplay='audio2.pause();'></audio><br><audio id='audio2' controls src='q91_apex.mp3' onplay='audio1.pause();'></audio><br>Which is the correct pairing?",
+    ["Top: cardiac base, Bottom: cardiac apex", "Top: cardiac apex, Bottom: cardiac base", "Both from the cardiac apex", "Both from the cardiac base"],
     0,
-    "健常者ではⅠ音（S1）は低調で長く心尖部優位で，Ⅱ音（S2）は高調で短く心基部優位である．このパターンを耳でもしっかり覚えておきたい．"
+    "In healthy individuals, S1 is lower pitched and longer and is more prominent at the apex, while S2 is higher pitched and shorter and is more prominent at the base. This pattern should be memorized by ear."
   ],
-    [
-    "問題92：腎機能の悪化で受診<br><img src='q92.jpg' style='width:100%; max-width:600px; height:auto;' alt='趾'><br>疑われる病態はどれか．",
-    ["青色趾症候群（ブルートウ症候群）", "閉塞性動脈硬化症", "うっ滞性皮膚炎", "下肢深部静脈血栓"],
+  [
+    "Q92: Patient presenting with worsening renal function<br><img src='q92.jpg' style='width:100%; max-width:600px; height:auto;' alt='Toes'><br>Which condition is suspected?",
+    ["Blue toe syndrome", "Arteriosclerosis obliterans", "Stasis dermatitis", "Deep vein thrombosis of the lower extremities"],
     0,
-    "右4趾や左3, 5趾などに紫黒色の色調変化を認める．青色趾症候群（ブルートウ症候群）の機序は，コレステロール（結晶）塞栓症である．本例は少し前に心臓カテーテル検査を受けていた．"
+    "Purple-black discoloration is visible on the right 4th toe and left 3rd and 5th toes. Blue toe syndrome is caused by cholesterol crystal embolism. This patient had undergone cardiac catheterization shortly before."
   ],
   [
-    "問題93：労作時の息切れで受診（座位）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q93.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>疑われる病態はどれか．",
-    ["非代償性心不全", "大動脈弁狭窄症", "大動脈弁逆流症", "慢性閉塞性肺疾患（COPD）"],
+    "Q93: Patient presenting with exertional dyspnea (seated)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q93.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which condition is suspected?",
+    ["Decompensated heart failure", "Aortic stenosis", "Aortic regurgitation", "Chronic obstructive pulmonary disease (COPD)"],
     3,
-    "胸鎖乳突筋の肥大・発達が目立ち，吸気に頸部が全体的に陥凹している（陥没呼吸）．COPDなどの肺疾患では，胸鎖乳突筋の肥大・発達や陥没呼吸に加えて，気管短縮，呼気時間延長，フーバー徴候（吸気時に肋間が内方陥凹）などを認める．"
+    "Prominent hypertrophy of the sternocleidomastoid muscles and supraclavicular/suprasternal retractions on inspiration are visible. In lung diseases such as COPD, sternocleidomastoid hypertrophy, retractions, tracheal tug, prolonged expiration, and Hoover's sign (inward movement of the costal margins on inspiration) may all be present."
   ],
   [
-    "問題94：心雑音を指摘され受診<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q94.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>正しいのはどれか．",
-    ["収縮期雑音", "拡張期雑音", "往復雑音", "連続性雑音"],
+    "Q94: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q94.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which of the following is correct?",
+    ["Systolic murmur", "Diastolic murmur", "To-and-fro murmur", "Continuous murmur"],
     3,
-    "収縮期雑音が滑らかに拡張期まで持続している．Ⅱ音（S2）前後で雑音が変化しない点が往復雑音とは異なる．なお連続性雑音は，必ずしも一心周期にわたり雑音が連続しないことにも要注意．"
+    "The systolic murmur continues smoothly into diastole. Unlike a to-and-fro murmur, there is no change in character around S2. Note that a continuous murmur does not necessarily persist throughout the entire cardiac cycle."
   ],
   [
-    "問題95：心雑音を指摘され受診<br><audio controls id='sampleAudio' src='q95.mp3'></audio><br>正しいのはどれか．",
-    ["拡張期雑音", "漸減性雑音", "灌水様雑音", "上記のすべて"],
+    "Q95: Patient referred for evaluation of a cardiac murmur<br><audio controls id='sampleAudio' src='q95.mp3'></audio><br>Which of the following is correct?",
+    ["Diastolic murmur", "Decrescendo murmur", "Blowing murmur", "All of the above"],
     3,
-    "大動脈弁逆流症に伴う典型的な心雑音である．持続が短い収縮期駆出性雑音も伴っているため，厳密には往復雑音（to-and-fro murmur）である．本例ではⅠ音（S1）直後に出現している駆出音にも留意したい．駆出音は様々な疾患で出現するが，日常臨床では大動脈二尖弁が多い．"
+    "This is a typical murmur of aortic regurgitation. A short systolic ejection murmur is also present, making it strictly a to-and-fro murmur. Note the ejection sound immediately after S1 — this can occur in various conditions, but in clinical practice a bicuspid aortic valve is common."
   ],
   [
-    "問題96：心雑音がある若者<br><img src='q96.jpg' style='width:100%; max-width:600px; height:auto;' alt='指'><br>疑われる弁膜症はどれか．",
-    ["大動脈弁逆流症", "大動脈弁狭窄症", "僧帽弁逆流症", "僧帽弁狭窄症"],
+    "Q96: Young patient with a cardiac murmur<br><img src='q96.jpg' style='width:100%; max-width:600px; height:auto;' alt='Fingers'><br>Which valvular disease is suspected?",
+    ["Aortic regurgitation", "Aortic stenosis", "Mitral regurgitation", "Mitral stenosis"],
     0,
-    "この所見は親指徴候（スタインバーグ徴候）と呼ばれ，母指を握った時に拳の外縁を母指の先端が越える．マルファン症候群など遺伝性大動脈疾患で認めることがある．本病態で大動脈弁逆流を生じる理由は大動脈基部の拡大．"
+    "This is the thumb sign (Steinberg sign): when the thumb is enclosed in the fist, the tip protrudes beyond the ulnar border. It can be seen in Marfan syndrome and other heritable aortic diseases. Aortic regurgitation in this setting results from aortic root dilatation."
   ],
   [
-    "問題97：心不全で入院中の男性<br><img src='q97.jpg' style='width:100%; max-width:600px; height:auto;' alt='下腿'><br>疑われる病態はどれか．",
-    ["サルコペニア", "心臓性悪液質", "重症の心不全", "上記のすべて"],
+    "Q97: Male patient hospitalized with heart failure<br><img src='q97.jpg' style='width:100%; max-width:600px; height:auto;' alt='Lower leg'><br>Which condition is suspected?",
+    ["Sarcopenia", "Cardiac cachexia", "Severe heart failure", "All of the above"],
     3,
-    "指輪っかテスト陽性（下腿の最大径部より母指と示指で作った指の輪が大きい）．この所見は下腿の骨格筋量や脂肪減少を意味し，心不全例ならば病態が進行した悪液質（カヘキシア）が疑われる．"
+    "Positive calf circumference test (a circle made by the thumb and index finger is larger than the maximum calf circumference). This indicates reduced skeletal muscle mass and fat in the calf — in a heart failure patient, this suggests advanced cachexia."
   ],
   [
-    "問題98：入退院を繰り返す心不全例<br><img src='q98.jpeg' style='width:100%; max-width:600px; height:auto;' alt='手'><br>ノーリア・スティーブンソン分類の分類はどれか．",
-    ["低灌流なし（warm）", "低灌流あり（cold）", "うっ血なし（dry）", "うっ血あり（wet）"],
+    "Q98: Patient with recurrent heart failure hospitalizations<br><img src='q98.jpeg' style='width:100%; max-width:600px; height:auto;' alt='Hand'><br>What is the Nohria-Stevenson classification?",
+    ["No hypoperfusion (warm)", "Hypoperfusion present (cold)", "No congestion (dry)", "Congestion present (wet)"],
     1,
-    "爪床は蒼白でチアノーゼがあり，手掌は白色調で静脈が明瞭に浮き出ている．本例のようにとても冷たい末梢（cold）は，予後不良と関連する．なお本所見から，うっ血の有無（dryあるいはwet）は判断できない．"
+    "The nail beds are pale with cyanosis, and the palm is whitish with prominent veins. Extremely cold peripheries (cold) like this are associated with poor prognosis. This finding alone cannot determine the presence or absence of congestion (dry vs. wet)."
   ],
   [
-    "問題99：心雑音を指摘され受診<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q99.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>考えられる弁膜症はどれか．",
-    ["三尖弁逆流症", "僧帽弁逆流症", "肺動脈弁逆流症", "大動脈弁逆流症"],
+    "Q99: Patient referred for evaluation of a cardiac murmur<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q99.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which valvular disease is most likely?",
+    ["Tricuspid regurgitation", "Mitral regurgitation", "Pulmonic regurgitation", "Aortic regurgitation"],
     3,
-    "上腕動脈の規則正しい拍動を視認する（肘の屈曲時により明瞭化）．これは一回心拍出量の増加した大脈を反映する身体所見で，水槌脈や反跳脈などと呼ばれている．本例では，その後の心エコーで，重症の大動脈弁逆流を確認した．"
+    "Regular pulsation of the brachial artery is visible on inspection (more prominent on elbow flexion). This reflects a large stroke volume — also called a water-hammer pulse or Corrigan's pulse in the peripheral vessel context. Subsequent echocardiography confirmed severe aortic regurgitation."
   ],
   [
-    "問題100：息切れで来院（肘部で記録，マンシェットなし）<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q100.mp4' type='video/mp4'>お使いのブラウザは対応していません．</video><br>考えられる疾患はどれか．",
-    ["大動脈弁狭窄（軽症）", "大動脈弁狭窄（重症）", "大動脈弁逆流（軽症）", "大動脈弁逆流（重症）"],
+    "Q100: Patient presenting with dyspnea (recorded at the elbow, no cuff)<br><video controls style='width:100%; max-width:600px; height:auto;'><source src='q100.mp4' type='video/mp4'>Your browser does not support this video.</video><br>Which disease is most likely?",
+    ["Aortic stenosis (mild)", "Aortic stenosis (severe)", "Aortic regurgitation (mild)", "Aortic regurgitation (severe)"],
     3,
-    "この鋭い音はピストル射撃音と呼ばれ，重症の大動脈弁逆流症で聴取することがある．一回心拍出量の増加による末梢動脈圧の急激な上昇に関連する音と考えられている．本例のピストル射撃音は，大動脈弁置換術後に消失した．"
-  ]  /* 最後の問題はコンマなし */
+    "This sharp sound is called a pistol-shot sound and can be heard in severe aortic regurgitation. It is thought to be related to the sudden rise in peripheral arterial pressure from a large stroke volume. The pistol-shot sound in this patient disappeared after aortic valve replacement."
+  ]  /* No comma after the last question */
 ];
 
 /* ===== LOGIC ===== */
 let i=0,score=0,startTime=0,correct=0,order=[];
 
 
-// ===== 練習モード追加 =====
+// ===== PRACTICE MODE =====
 let mode = "challenge";   // "challenge" or "practice"
 let practiceCount = 0;
 const PRACTICE_LIMIT = 10;
@@ -1180,13 +1172,13 @@ function start() {
 }
 
 
-// ===== 練習モード追加 =====
+// ===== PRACTICE MODE =====
 function startPractice() {
 
   mode = "practice";
   reviewMode = false;
 
-  practiceCount = 0;   // ★これが必須
+  practiceCount = 0;   // ★ required
 
   entry.classList.add("hidden");
   quiz.classList.remove("hidden");
@@ -1205,7 +1197,7 @@ function startPractice() {
 
 
 
-// 簡単な音を鳴らす基本関数
+// Basic tone function
 function playTone(frequency, duration){
     const o = ctx.createOscillator();
     const g = ctx.createGain();
@@ -1216,7 +1208,7 @@ function playTone(frequency, duration){
     g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
 }
 
-// ノック開始時の音
+// Sound at quiz start
 function startSound(){
   if (soundEnabled) {
     playTone(440, 0.15); // A4
@@ -1225,7 +1217,7 @@ function startSound(){
     }
 }
 
-// 初級者向け（軽く祝福する音）
+// Beginner rank (light celebratory tone)
 function celebrateBeginner(){
   if (soundEnabled) {
     playTone(440,0.2); // A4
@@ -1233,7 +1225,7 @@ function celebrateBeginner(){
     }
 }
 
-// 中級者向け（少し元気な音）
+// Intermediate rank (upbeat tone)
 function celebrateMiddle(){
   if (soundEnabled) {
     playTone(523,0.2); // C5
@@ -1242,7 +1234,7 @@ function celebrateMiddle(){
     }
 }
 
-// 上級者向け（華やかで長めの音）
+// Advanced rank (bright, extended tone)
 function celebrateAdvanced(){
   if (soundEnabled) {
     playTone(523,0.2); // C5
@@ -1252,7 +1244,7 @@ function celebrateAdvanced(){
     }
 }
 
-// マイスター向け（最後に高いC音でフィニッシュする華やかさ）
+// Meister rank (grand finish with high C)
 function celebrateMeister(){
   if (soundEnabled) {
     playTone(523, 0.2);  // C5
@@ -1264,7 +1256,7 @@ function celebrateMeister(){
     }
 }
 
-// アイコンクリック時のアクション
+// Action on icon click
 document.addEventListener("DOMContentLoaded", () => {
   const topIcon = document.getElementById("topIcon");
   const img = topIcon?.querySelector("img");
@@ -1277,7 +1269,7 @@ document.addEventListener("DOMContentLoaded", () => {
     void img.offsetWidth;
     img.classList.add("icon-pop");
 
-    // 効果音
+    // Sound effect
     if (soundEnabled) {
       tone(900, 0.08);
       setTimeout(() => tone(1200, 0.08), 90);
@@ -1285,7 +1277,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-  // ミュートボタン
+  // Mute button
 function toggleSound(){
   soundEnabled = !soundEnabled;
 
@@ -1295,11 +1287,11 @@ function toggleSound(){
   }
 
   const btn = document.getElementById("soundBtn");
-  btn.textContent = soundEnabled ? "🔊 効果音 ON" : "🔇 効果音 OFF";
+  btn.textContent = soundEnabled ? "🔊 Sound ON" : "🔇 Sound OFF";
 }
 
 
-  // 別アクション
+  // Display question
 function show() {
 
   msg.textContent = "";
@@ -1311,11 +1303,11 @@ function show() {
   answerBtn.classList.remove("hidden");
 
   // ==========================
-  // 進行バー表示
+  // Progress bar
   // ==========================
   if (reviewMode) {
 
-    // 🔁 復習モード：間違えた問題数基準
+    // 🔁 Review mode: based on wrong question count
     bar.classList.remove("practice-bar");
 
     bar.style.width =
@@ -1323,7 +1315,7 @@ function show() {
 
   } else if (mode === "practice") {
 
-    // 🟡 練習モード：10問
+    // 🟡 Practice mode: 10 questions
     bar.classList.add("practice-bar");
 
     bar.style.width =
@@ -1331,7 +1323,7 @@ function show() {
 
   } else {
 
-    // 🔴 検定モード：全問題数
+    // 🔴 Exam mode: total questions
     bar.classList.remove("practice-bar");
 
     bar.style.width =
@@ -1339,12 +1331,12 @@ function show() {
   }
 
   // ==========================
-  // ステータス表示
+  // Status display
   // ==========================
-  status.textContent = `${score}点`;
+  status.textContent = `Score: ${score}`;
 
   // ==========================
-  // 問題表示
+  // Display question
   // ==========================
   const q = Q[order[i]];
   question.innerHTML = q[0];
@@ -1354,14 +1346,14 @@ function show() {
     ok: idx === q[2]
   }));
 
-  let special = arr.filter(o => o.t === "上記のすべて");
-  let normal  = arr.filter(o => o.t !== "上記のすべて");
+  let special = arr.filter(o => o.t === "All of the above");
+  let normal  = arr.filter(o => o.t !== "All of the above");
 
   normal.sort(() => Math.random() - 0.5);
   arr = [...normal, ...special];
 
   // ==========================
-  // 選択肢生成
+  // Generate choices
   // ==========================
   choices.innerHTML = "";
 
@@ -1381,7 +1373,7 @@ function show() {
 
 function check() {
 
-  // 二重実行防止
+  // Prevent double execution
   if (answerBtn.classList.contains("hidden")) return;
 
   click();
@@ -1389,30 +1381,30 @@ function check() {
   const s = document.querySelector("input[name=a]:checked");
   if (!s) return;
 
-  // 回答後UI固定
+  // Lock UI after answer
   answerBtn.classList.add("hidden");
 
   const c = document.querySelectorAll(".choice");
   c.forEach(x => x.style.pointerEvents = "none");
 
-  // 正解表示
+  // Show correct answer
   c[correct].classList.add("correct");
 
   // ======================
-  // 最終問題判定（全モード共通）
+  // Final question check (all modes)
   // ======================
   const lastIndex = order.length - 1;
   const isLast = (i === lastIndex);
 
   // ======================
-  // 正解
+  // Correct
   // ======================
   if (+s.value === correct) {
 
     ok();
     score++;
 
-    // 🔁 復習モード：正解した問題を削除
+    // 🔁 Review mode: remove correctly answered question
     if (reviewMode) {
       const realIndex = order[i];
       wrongQuestions = wrongQuestions.filter(q => q !== realIndex);
@@ -1420,20 +1412,20 @@ function check() {
       updateReviewButton();
     }
 
-    msg.textContent = "⭕ 正解";
-    exp.textContent = "解説：" + Q[order[i]][3];
+    msg.textContent = "⭕ Correct!";
+    exp.textContent = "Explanation: " + Q[order[i]][3];
     c[correct].classList.add("shine");
 
   }
 
   // ======================
-  // 不正解
+  // Incorrect
   // ======================
   else {
 
     ng();
 
-    // 🔴 検定・練習モードのみ記録
+    // 🔴 Record only in exam/practice mode
     if (!reviewMode) {
       const realIndex = order[i];
       if (!wrongQuestions.includes(realIndex)) {
@@ -1448,38 +1440,38 @@ function check() {
 
     c[s.value].classList.add("wrong");
 
-    msg.textContent = "❌ 不正解（正解は緑）";
-    exp.textContent = "解説：" + Q[order[i]][3];
+    msg.textContent = "❌ Incorrect (correct answer highlighted in green)";
+    exp.textContent = "Explanation: " + Q[order[i]][3];
 
-    // 🔴 検定モードは即終了
+    // 🔴 Exam mode ends immediately
     if (mode === "challenge") {
-    // ✅ 次の問題は出さない
+    // ✅ Do not show next question
     nextBtn.classList.add("hidden");
 
-    // ✅ 結果を見るのみ表示
+    // ✅ Show results button only
     resultBtn.classList.remove("hidden");
     }
   }
 
   // ======================
-  // ★ 終了判定（正誤共通）
+  // End check (common to correct/incorrect)
   // ======================
   if (isLast) {
 
-    // 最終問題は必ず100%
+    // Final question always 100%
     bar.style.width = "100%";
 
-    // 🔁 復習モード
+    // 🔁 Review mode
     if (reviewMode) {
-      nextBtn.textContent = "復習を終了";
+      nextBtn.textContent = "Finish Review";
       nextBtn.onclick = finishReview;
       nextBtn.classList.remove("hidden");
       return;
     }
 
-    // 🟡 練習モード
+    // 🟡 Practice mode
     if (mode === "practice") {
-      nextBtn.textContent = "練習を終了";
+      nextBtn.textContent = "Finish Practice";
       nextBtn.onclick = () => {
         quiz.classList.add("hidden");
         entry.classList.remove("hidden");
@@ -1488,7 +1480,7 @@ function check() {
       return;
     }
 
-    // 🔴 検定モード
+    // 🔴 Exam mode
     if (mode === "challenge") {
       finish();
       return;
@@ -1496,18 +1488,18 @@ function check() {
   }
 
   // ======================
-  // 次の問題
+  // Next question
   // ======================
-  // 🔴 検定モード不正解時は表示しない
+  // 🔴 Exam mode不正解時は表示しない
 if (mode === "challenge" && +s.value !== correct) {
   return;
 }
 
-  nextBtn.textContent = "次の問題";
+  nextBtn.textContent = "Next Question";
   nextBtn.onclick = next;
   nextBtn.classList.remove("hidden");
 
-  // 解説位置へスクロール
+  // Scroll to explanation
   document.getElementById("exp")
     .scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -1518,7 +1510,7 @@ if (mode === "challenge" && +s.value !== correct) {
 function next() {
 
   // ----------------------
-  // 練習モード
+  // Practice mode
   // ----------------------
   if (mode === "practice") {
     practiceCount++;
@@ -1529,7 +1521,7 @@ function next() {
   }
 
   // ----------------------
-  // ★ 復習モード
+  // Review mode
   // ----------------------
   if (reviewMode) {
     i++;
@@ -1542,7 +1534,7 @@ function next() {
   }
 
   // ----------------------
-  // 検定モード
+  // Exam mode
   // ----------------------
   i++;
   show();
@@ -1552,20 +1544,20 @@ function next() {
 function finish() {
 
   // =====================================
-  // ★ 二重実行防止（最重要）
+  // Prevent double execution
   // =====================================
   if (finish._done) return;
   finish._done = true;
 
   // =====================================
-  // 進行バー補正（検定満点時）
+  // Progress bar correction (perfect score)
   // =====================================
   if (mode === "challenge" && score === Q.length) {
     bar.style.width = "100%";
   }
 
   // =====================================
-  // マイスター達成記録
+  // Record Meister achievement
   // =====================================
   if (score === 100) {
     localStorage.setItem("meisterCleared", "true");
@@ -1573,31 +1565,30 @@ function finish() {
   updateTopIcon();
 
   // =====================================
-  // 表示切替（★ トップへ戻さない）
+  // Switch display (do not return to top)
   // =====================================
   quiz.classList.add("hidden");
-  entry.classList.add("hidden");   // ★ 念のため明示
+  entry.classList.add("hidden");   // ★ explicitly hide just in case
   result.classList.remove("hidden");
 
   // =====================================
-  // 経過時間
+  // Elapsed time
   // =====================================
   const t = Math.floor((Date.now() - startTime) / 1000);
 
   let cls, title, sub, imgSrc;
 
   // =====================================
-  // 称号判定
+  // Rank determination
   // =====================================
   if (score === Q.length * 1) {
 
-    // 満点
+    // Perfect score
     celebrateMeister();
 
     cls = "meister";
-    title = "マイスター認定";
-    sub = `達成日：${new Date().toLocaleDateString()}<br>
-           時間：${Math.floor(t / 60)}分${t % 60}秒`;
+    title = "Meister Certified";
+    sub = `Date Achieved: ${new Date().toLocaleDateString()}<br>Time: ${Math.floor(t / 60)}m ${t % 60}s`;
     imgSrc = "gold.gif";
 
     sub += `
@@ -1607,18 +1598,18 @@ function finish() {
             margin-bottom: 25px; padding: 20px;">
   <div style="text-align:center; font-size: 18px;
               margin-top:5px; margin-bottom:20px;">
-    <b>― 贈る言葉 ―</b>
+    <b>― Words of Wisdom ―</b>
   </div>
   <ul class="rule" style="text-align:left; line-height:1.3; padding-left:20px;">
-    <li>Physical Examを極めれば，ほとんどの心疾患は診断に迫ることができる</li>
-    <li>心電図，レントゲン，心エコーといった検査は，Physical Examの妥当性を確かめるために存在する</li>
-    <li>精密検査と身体所見が食い違ったとき，直ちに検査結果を受け入れてはならない</li>
-    <li>なぜ一致しないのかを考え続ける姿勢こそが，Physical Examを磨く</li>
-    <li>誤るのは，ときに精密検査のほうである</li>
+    <li>Mastery of physical examination alone can bring you close to diagnosing almost every cardiac condition.</li>
+    <li>ECG, chest X-ray, and echocardiography exist to confirm the validity of your physical examination findings.</li>
+    <li>When imaging conflicts with your physical findings, do not immediately accept the test result.</li>
+    <li>The habit of asking why they disagree is what refines your physical examination skills.</li>
+    <li>Sometimes it is the imaging study that is wrong.</li>
   </ul>
   <div style="text-align:right; font-size: 16px;
               margin-top:10px; margin-bottom:5px;">
-    <b>坂本二哉</b>
+    <b>— A Cardiovascular Legend</b>
   </div>
 </div>
 `;
@@ -1627,40 +1618,40 @@ function finish() {
 
     celebrateBeginner();
     cls = "beginner";
-    title = "初級者";
-    sub = "ネバ―ギブアップ！";
+    title = "Beginner";
+    sub = "Never give up!";
     imgSrc = "green.gif";
 
   } else if (score < 50) {
 
     celebrateMiddle();
     cls = "middle";
-    title = "中級者";
-    sub = "着実に成長中！";
+    title = "Intermediate";
+    sub = "Making steady progress!";
     imgSrc = "blue.gif";
 
   } else {
 
     celebrateAdvanced();
     cls = "advanced";
-    title = "上級者";
-    sub = "更なる高みへ！";
+    title = "Advanced";
+    sub = "Aim even higher!";
     imgSrc = "red.gif";
   }
 
   // =====================================
-  // 結果表示
+  // Display results
   // =====================================
   resultBox.className = `result-box ${cls}`;
   resultBox.innerHTML = `
-    <img class="medal" src="${imgSrc}" alt="アイコン">
+    <img class="medal" src="${imgSrc}" alt="icon">
     <div class="rank-title">${title}</div>
     <div class="rank-sub">${sub}</div>
-    <p>得点：${score}点</p>
+    <p>Score: ${score} pts</p>
   `;
 
   // =====================================
-  // ★ モード初期化（最重要）
+  // Reset mode
   // =====================================
   mode = "challenge";
   reviewMode = false;
@@ -1673,7 +1664,7 @@ function reset() {
   click(); result.classList.add("hidden");
   entry.classList.remove("hidden");
   updateReviewButton();
-// もう一度ボタン時にスコアを更新
+// Update score when Try Again is pressed
 const best = Number(localStorage.getItem("bestScore")) || 0;
 if (score > best) {
   localStorage.setItem("bestScore", score);
@@ -1683,7 +1674,7 @@ updateBestScoreDisplay();
 
 }
 
-// ミュートボタン
+// Mute button
 const iconOn  = document.getElementById("soundOn");
 const iconOff = document.getElementById("soundOff");
 
@@ -1706,7 +1697,7 @@ iconOff.addEventListener("click", () => {
   updateSoundUI();
 });
 
-// マイスター達成後は金アイコン
+// Gold icon after Meister achievement
 function updateTopIcon() {
   const img = document.querySelector("#topIcon img");
   if (!img) return;
@@ -1725,11 +1716,11 @@ function finishPractice() {
   quiz.classList.add("hidden");
   entry.classList.remove("hidden");
 
-  mode = "challenge"; // 念のため戻す
+  mode = "challenge"; // reset just in case
 }
 
 // ===============================
-// 間違えた問題を保存
+// Save wrong questions
 // ===============================
 function saveWrongQuestions() {
   localStorage.setItem(
@@ -1739,7 +1730,7 @@ function saveWrongQuestions() {
 }
 
 // ===============================
-// 間違えた問題を読み込み（安全版）
+// Load wrong questions (safe version)
 // ===============================
 function loadWrongQuestions() {
   const data = localStorage.getItem("wrongQuestions");
@@ -1759,36 +1750,21 @@ function loadWrongQuestions() {
 
 document.addEventListener("DOMContentLoaded", () => {
   loadWrongQuestions();
-  updateReviewButton();   // ← 必ずここで1回だけ
+  updateReviewButton();   // ← must be called exactly once here
 });
 
 
-function jumpToQuestion() {
-  const num = parseInt(document.getElementById("jumpInput").value);
 
-  if (isNaN(num) || num < 1 || num > Q.length) {
-    alert("1〜" + Q.length + "の番号を入力してください");
-    return;
+</script>
+<!-- Service Worker 登録 -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('SW registered:', reg.scope))
+        .catch((err) => console.warn('SW registration failed:', err));
+    });
   }
-
-  // モードは通常（検定）扱い
-  reviewMode = false;
-  mode = "jump";
-
-  // 指定問題だけ出す
-  order = [num - 1];
-
-  i = 0;
-  score = 0;
-
-  // 画面切り替え
-  entry.classList.add("hidden");
-  result.classList.add("hidden");
-  quiz.classList.remove("hidden");
-
-  show();
-}
-
 </script>
 </body>
 </html>
